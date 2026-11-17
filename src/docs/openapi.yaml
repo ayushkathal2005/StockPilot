@@ -242,6 +242,263 @@ paths:
         '200':
           description: Product soft-deactivated.
 
+  /inventory:
+    get:
+      summary: Get Inventory Positions & Health Status
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: categoryId
+          in: query
+          schema:
+            type: integer
+        - name: stockHealth
+          in: query
+          schema:
+            type: string
+            enum: [HEALTHY, LOW_STOCK, OUT_OF_STOCK]
+        - name: search
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of inventory positions with valuation and stock health.
+
+  /inventory/movements:
+    get:
+      summary: Query Stock Movement Ledger
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: productId
+          in: query
+          schema:
+            type: integer
+        - name: movementType
+          in: query
+          schema:
+            type: string
+            enum: [SALE, PO_RECEIPT, ADJUSTMENT_IN, ADJUSTMENT_OUT, RETURN]
+      responses:
+        '200':
+          description: Audit history of stock movements.
+
+  /inventory/adjust:
+    post:
+      summary: Manual Stock Adjustment (Manager/Admin Only)
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [productId, quantityDelta, movementType, notes]
+              properties:
+                productId:
+                  type: integer
+                quantityDelta:
+                  type: integer
+                movementType:
+                  type: string
+                  enum: [ADJUSTMENT_IN, ADJUSTMENT_OUT, RETURN]
+                notes:
+                  type: string
+      responses:
+        '200':
+          description: Stock adjusted and ledger entry written.
+        '400':
+          description: Invalid adjustment or negative stock.
+
+  /inventory/reorder-alerts:
+    get:
+      summary: Get Rule-Based Reorder Recommendations
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Active products at or below reorder threshold with suggested replenishment quantities.
+
+  /sales:
+    get:
+      summary: List Sales Transactions
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: List of sales transactions with line counts and totals.
+    post:
+      summary: Record New Point of Sale Transaction
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [items]
+              properties:
+                items:
+                  type: array
+                  items:
+                    type: object
+                    required: [productId, quantity]
+                    properties:
+                      productId:
+                        type: integer
+                      quantity:
+                        type: integer
+      responses:
+        '201':
+          description: Sale posted atomically, inventory deducted, and receipt generated.
+        '400':
+          description: Insufficient stock or invalid payload.
+
+  /sales/{id}:
+    get:
+      summary: Get Sale Receipt & Details
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Sale receipt with items and historical gross profit.
+        '404':
+          description: Sale not found.
+
+  /purchase-orders:
+    get:
+      summary: List Purchase Orders
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [DRAFT, SUBMITTED, PARTIALLY_RECEIVED, RECEIVED, CANCELLED]
+      responses:
+        '200':
+          description: List of purchase orders.
+    post:
+      summary: Create Draft Purchase Order (Manager/Admin Only)
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [supplierId, items]
+              properties:
+                supplierId:
+                  type: integer
+                expectedDeliveryDate:
+                  type: string
+                  format: date
+                items:
+                  type: array
+                  items:
+                    type: object
+                    required: [productId, orderedQuantity, unitCost]
+                    properties:
+                      productId:
+                        type: integer
+                      orderedQuantity:
+                        type: integer
+                      unitCost:
+                        type: number
+      responses:
+        '201':
+          description: Draft PO created.
+
+  /purchase-orders/{id}:
+    get:
+      summary: Get Purchase Order Details
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Detailed PO with items and receiving progress.
+
+  /purchase-orders/{id}/submit:
+    post:
+      summary: Submit/Authorize Purchase Order (Manager/Admin Only)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: PO status transitioned to SUBMITTED and counted as on-order inventory.
+
+  /purchase-orders/{id}/receive:
+    post:
+      summary: Receive Inbound PO Items (Manager/Admin Only)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [receipts]
+              properties:
+                receipts:
+                  type: array
+                  items:
+                    type: object
+                    required: [poItemId, quantityToReceive]
+                    properties:
+                      poItemId:
+                        type: integer
+                      quantityToReceive:
+                        type: integer
+      responses:
+        '200':
+          description: Items received, inventory incremented, and PO status updated.
+
+  /purchase-orders/{id}/cancel:
+    post:
+      summary: Cancel Purchase Order (Manager/Admin Only)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Unreceived PO cancelled.
+
 components:
   securitySchemes:
     BearerAuth:

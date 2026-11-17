@@ -69,9 +69,9 @@ graph TD
 
 ## Current Project Status
 
-- **Current Phase:** **Phase 3 — Complete (Bootstrap Frontend Shell, Catalog Screens & REST APIs)**
-- **Next Phase:** Phase 4 — Inventory Ledger, Sales & Purchase Order Workflows *(Pending explicit user approval)*
-- **Frontend & Catalog Status:** Responsive Bootstrap 5 user interface fully integrated with Express REST APIs and SQL Server. Features dynamic login/logout flows, role-tailored navigation bars (`Admin`, `Manager`, `Staff`), interactive product catalog management with search/category/stock filters and modal CRUD dialogs, commercial supplier directory, taxonomy categories manager, and 35/35 automated test cases passing (100%).
+- **Current Phase:** **Phase 4 — Complete (Inventory Ledger, Sales Recording & Purchase Order Workflows)**
+- **Next Phase:** Phase 5 — Metabase & SQL Server Business Intelligence Dashboards *(Pending explicit user approval)*
+- **Core Operations Status:** Enterprise-grade double-entry inventory ledger, atomic sales transaction processor with `UPDLOCK` concurrency safety, frozen historical unit cost capture for gross profit calculation, multi-state Purchase Order lifecycle (`DRAFT`, `SUBMITTED`, `PARTIALLY_RECEIVED`, `RECEIVED`, `CANCELLED`), partial receiving logic with invariant validation, rule-based moving average replenishment recommendation engine, Point-of-Sale terminal frontend, and 48/48 automated test cases passing (100%).
 
 ---
 
@@ -91,7 +91,33 @@ StockPilot/
 │   ├── requirements.md
 │   ├── technical-decisions.md
 │   └── phase-reports/
-│       └── phase-00-report.md
+│       ├── phase-00-report.md
+│       ├── phase-01-report.md
+│       ├── phase-02-report.md
+│       ├── phase-03-report.md
+│       └── phase-04-report.md
+├── public/
+│   ├── index.html
+│   ├── login.html
+│   ├── products.html
+│   ├── categories.html
+│   ├── suppliers.html
+│   ├── inventory.html
+│   ├── sales.html
+│   ├── purchase-orders.html
+│   ├── css/style.css
+│   └── js/
+├── src/
+│   ├── app.js
+│   ├── server.js
+│   ├── config/
+│   ├── controllers/
+│   ├── middleware/
+│   ├── repositories/
+│   ├── routes/
+│   ├── services/
+│   └── docs/openapi.yaml
+└── tests/
 ```
 
 ---
@@ -108,6 +134,7 @@ StockPilot/
 - [Phase 1 Completion Report](file:///c:/Users/ayush/Desktop/StockPilot/docs/phase-reports/phase-01-report.md)
 - [Phase 2 Completion Report](file:///c:/Users/ayush/Desktop/StockPilot/docs/phase-reports/phase-02-report.md)
 - [Phase 3 Completion Report](file:///c:/Users/ayush/Desktop/StockPilot/docs/phase-reports/phase-03-report.md)
+- [Phase 4 Completion Report](file:///c:/Users/ayush/Desktop/StockPilot/docs/phase-reports/phase-04-report.md)
 
 ---
 

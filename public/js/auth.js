@@ -69,8 +69,19 @@ const auth = {
           <div class="collapse navbar-collapse" id="stockpilotNav">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
               <li class="nav-item">
-                <a class="nav-link ${activePage === 'products' ? 'active' : ''}" href="/products.html">Products & Inventory</a>
+                <a class="nav-link ${activePage === 'products' ? 'active' : ''}" href="/products.html">Products</a>
               </li>
+              <li class="nav-item">
+                <a class="nav-link ${activePage === 'inventory' ? 'active' : ''}" href="/inventory.html">Inventory Ledger</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link ${activePage === 'sales' ? 'active' : ''}" href="/sales.html">Point of Sale</a>
+              </li>
+              ${isManagerOrAdmin ? `
+              <li class="nav-item">
+                <a class="nav-link ${activePage === 'purchase-orders' ? 'active' : ''}" href="/purchase-orders.html">Purchase Orders</a>
+              </li>
+              ` : ''}
               <li class="nav-item">
                 <a class="nav-link ${activePage === 'categories' ? 'active' : ''}" href="/categories.html">Categories</a>
               </li>
