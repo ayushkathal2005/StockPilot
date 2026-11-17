@@ -98,7 +98,15 @@ StockPilot/
 │       ├── phase-02-report.md
 │       ├── phase-03-report.md
 │       ├── phase-04-report.md
-│       └── phase-05-report.md
+│       ├── phase-05-report.md
+│       └── phase-06-report.md
+├── ml/
+│   ├── data/
+│   ├── features/
+│   ├── models/
+│   ├── artifacts/v1/
+│   ├── tests/
+│   └── requirements.txt
 ├── public/
 │   ├── index.html
 │   ├── login.html
@@ -133,6 +141,7 @@ StockPilot/
 - [TPDS-III Module Mapping](file:///c:/Users/ayush/Desktop/StockPilot/docs/module-mapping.md)
 - [Data Dictionary & ERD Draft](file:///c:/Users/ayush/Desktop/StockPilot/docs/data-dictionary.md)
 - [BI KPI Definitions & Reconciliation Guide](file:///c:/Users/ayush/Desktop/StockPilot/docs/bi-data-dictionary-and-kpis.md)
+- [ML Demand Forecasting Model Card](file:///c:/Users/ayush/Desktop/StockPilot/docs/ml-model-card.md)
 - [Database Setup & Operations Guide](file:///c:/Users/ayush/Desktop/StockPilot/sql/README.md)
 - [Technical Decisions & Version Policy](file:///c:/Users/ayush/Desktop/StockPilot/docs/technical-decisions.md)
 - [Phase 0 Completion Report](file:///c:/Users/ayush/Desktop/StockPilot/docs/phase-reports/phase-00-report.md)
@@ -141,6 +150,7 @@ StockPilot/
 - [Phase 3 Completion Report](file:///c:/Users/ayush/Desktop/StockPilot/docs/phase-reports/phase-03-report.md)
 - [Phase 4 Completion Report](file:///c:/Users/ayush/Desktop/StockPilot/docs/phase-reports/phase-04-report.md)
 - [Phase 5 Completion Report](file:///c:/Users/ayush/Desktop/StockPilot/docs/phase-reports/phase-05-report.md)
+- [Phase 6 Completion Report](file:///c:/Users/ayush/Desktop/StockPilot/docs/phase-reports/phase-06-report.md)
 
 ---
 
