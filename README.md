@@ -69,9 +69,9 @@ graph TD
 
 ## Current Project Status
 
-- **Current Phase:** **Phase 4 — Complete (Inventory Ledger, Sales Recording & Purchase Order Workflows)**
-- **Next Phase:** Phase 5 — Metabase & SQL Server Business Intelligence Dashboards *(Pending explicit user approval)*
-- **Core Operations Status:** Enterprise-grade double-entry inventory ledger, atomic sales transaction processor with `UPDLOCK` concurrency safety, frozen historical unit cost capture for gross profit calculation, multi-state Purchase Order lifecycle (`DRAFT`, `SUBMITTED`, `PARTIALLY_RECEIVED`, `RECEIVED`, `CANCELLED`), partial receiving logic with invariant validation, rule-based moving average replenishment recommendation engine, Point-of-Sale terminal frontend, and 48/48 automated test cases passing (100%).
+- **Current Phase:** **Phase 5 — Complete (Metabase & SQL Server Business Intelligence Dashboards)**
+- **Next Phase:** Phase 6 — ML Dataset Engineering, Baseline Models & XGBoost Training *(Pending explicit user approval)*
+- **Business Intelligence Status:** TPDS-III Module 1 fulfilled. Metabase v0.50.32 deployed on port 3001 via Docker with dedicated least-privilege read-only SQL Server account (`stockpilot_bi_readonly`). Implemented 5 specialized BI reporting views in SQL Server (`vw_BI_ExecutiveKPIs`, `vw_BI_DailySalesTrends`, `vw_BI_CategoryPerformance`, `vw_BI_TopProducts`, `vw_BI_SupplierPerformance`), comprehensive in-app analytics dashboard (`public/analytics.html`), KPI data dictionary with mathematical definitions and reconciliation audits, and 61/61 automated test cases passing (100%).
 
 ---
 
@@ -81,11 +81,13 @@ graph TD
 StockPilot/
 ├── .gitignore
 ├── .env.example
+├── docker-compose.yml
 ├── LICENSE
 ├── README.md
 ├── StockPilot_Antigravity_Implementation_Plan.md
 ├── docs/
 │   ├── architecture.md
+│   ├── bi-data-dictionary-and-kpis.md
 │   ├── data-dictionary.md
 │   ├── module-mapping.md
 │   ├── requirements.md
@@ -95,7 +97,8 @@ StockPilot/
 │       ├── phase-01-report.md
 │       ├── phase-02-report.md
 │       ├── phase-03-report.md
-│       └── phase-04-report.md
+│       ├── phase-04-report.md
+│       └── phase-05-report.md
 ├── public/
 │   ├── index.html
 │   ├── login.html
@@ -105,6 +108,7 @@ StockPilot/
 │   ├── inventory.html
 │   ├── sales.html
 │   ├── purchase-orders.html
+│   ├── analytics.html
 │   ├── css/style.css
 │   └── js/
 ├── src/
@@ -128,6 +132,7 @@ StockPilot/
 - [System Architecture](file:///c:/Users/ayush/Desktop/StockPilot/docs/architecture.md)
 - [TPDS-III Module Mapping](file:///c:/Users/ayush/Desktop/StockPilot/docs/module-mapping.md)
 - [Data Dictionary & ERD Draft](file:///c:/Users/ayush/Desktop/StockPilot/docs/data-dictionary.md)
+- [BI KPI Definitions & Reconciliation Guide](file:///c:/Users/ayush/Desktop/StockPilot/docs/bi-data-dictionary-and-kpis.md)
 - [Database Setup & Operations Guide](file:///c:/Users/ayush/Desktop/StockPilot/sql/README.md)
 - [Technical Decisions & Version Policy](file:///c:/Users/ayush/Desktop/StockPilot/docs/technical-decisions.md)
 - [Phase 0 Completion Report](file:///c:/Users/ayush/Desktop/StockPilot/docs/phase-reports/phase-00-report.md)
@@ -135,6 +140,7 @@ StockPilot/
 - [Phase 2 Completion Report](file:///c:/Users/ayush/Desktop/StockPilot/docs/phase-reports/phase-02-report.md)
 - [Phase 3 Completion Report](file:///c:/Users/ayush/Desktop/StockPilot/docs/phase-reports/phase-03-report.md)
 - [Phase 4 Completion Report](file:///c:/Users/ayush/Desktop/StockPilot/docs/phase-reports/phase-04-report.md)
+- [Phase 5 Completion Report](file:///c:/Users/ayush/Desktop/StockPilot/docs/phase-reports/phase-05-report.md)
 
 ---
 

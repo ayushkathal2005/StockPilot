@@ -81,6 +81,9 @@ const auth = {
               <li class="nav-item">
                 <a class="nav-link ${activePage === 'purchase-orders' ? 'active' : ''}" href="/purchase-orders.html">Purchase Orders</a>
               </li>
+              <li class="nav-item">
+                <a class="nav-link ${activePage === 'analytics' ? 'active' : ''}" href="/analytics.html">BI Analytics</a>
+              </li>
               ` : ''}
               <li class="nav-item">
                 <a class="nav-link ${activePage === 'categories' ? 'active' : ''}" href="/categories.html">Categories</a>

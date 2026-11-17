@@ -499,6 +499,63 @@ paths:
         '200':
           description: Unreceived PO cancelled.
 
+  /analytics/executive:
+    get:
+      summary: Get High-Level Executive Summary KPIs (Manager/Admin Only)
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Aggregated business revenue, gross margin, inventory asset valuation, and SKU health.
+
+  /analytics/sales-trends:
+    get:
+      summary: Get Chronological Daily Sales Trends (Manager/Admin Only)
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 30
+      responses:
+        '200':
+          description: Chronological list of daily sales metrics.
+
+  /analytics/category-performance:
+    get:
+      summary: Get Category Revenue, Gross Profit & Valuation (Manager/Admin Only)
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Financial and volume breakdown across product categories.
+
+  /analytics/top-products:
+    get:
+      summary: Get Top Selling Products (Manager/Admin Only)
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 10
+      responses:
+        '200':
+          description: Top products ranked by total revenue.
+
+  /analytics/supplier-performance:
+    get:
+      summary: Get Supplier Performance & Fulfillment Rates (Manager/Admin Only)
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Supplier spend, order volume, and on-time fulfillment rates.
+
 components:
   securitySchemes:
     BearerAuth:

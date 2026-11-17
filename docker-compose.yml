@@ -1,0 +1,43 @@
+version: '3.8'
+
+networks:
+  stockpilot-net:
+    name: stockpilot-net
+    driver: bridge
+
+volumes:
+  mssql_data:
+  metabase_data:
+
+services:
+  # 1. Primary Business Relational Store (Microsoft SQL Server 2022)
+  stockpilot-mssql:
+    container_name: stockpilot-mssql
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    restart: unless-stopped
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=YourStrong@Passw0rd123!
+      - MSSQL_PID=Developer
+    ports:
+      - "1433:1433"
+    volumes:
+      - mssql_data:/var/opt/mssql
+    networks:
+      - stockpilot-net
+
+  # 2. Business Intelligence & Analytics Engine (Metabase)
+  stockpilot-metabase:
+    container_name: stockpilot-metabase
+    image: metabase/metabase:v0.50.32
+    restart: unless-stopped
+    depends_on:
+      - stockpilot-mssql
+    ports:
+      - "3001:3000"
+    environment:
+      - MB_DB_FILE=/metabase.db/metabase.db
+    volumes:
+      - metabase_data:/metabase.db
+    networks:
+      - stockpilot-net
