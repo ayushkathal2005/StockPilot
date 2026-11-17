@@ -556,6 +556,123 @@ paths:
         '200':
           description: Supplier spend, order volume, and on-time fulfillment rates.
 
+  /forecast/ml-status:
+    get:
+      summary: Get ML Forecasting Service Health & Model Info
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Returns ML microservice availability, model version, and test metrics.
+
+  /forecast/generate:
+    post:
+      summary: Trigger Demand Forecasting & Replenishment Calculation (Manager/Admin Only)
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                horizonDays:
+                  type: integer
+                  minimum: 7
+                  maximum: 30
+                  default: 14
+      responses:
+        '201':
+          description: Successfully executed forecast and updated replenishment recommendations.
+        '400':
+          description: Invalid horizon range.
+        '403':
+          description: Forbidden for Staff role.
+
+  /forecast/recommendations:
+    get:
+      summary: List Replenishment Recommendations
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [PENDING, APPROVED_TO_PO, REJECTED]
+        - name: productId
+          in: query
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: List of calculated reorder recommendations with suggested quantities.
+
+  /forecast/recommendations/{id}/approve:
+    post:
+      summary: Approve Recommendation and Create Purchase Order (Manager/Admin Only)
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Recommendation approved and official Purchase Order created and submitted.
+        '400':
+          description: Recommendation already processed or invalid quantity.
+
+  /forecast/recommendations/{id}/reject:
+    post:
+      summary: Reject Recommendation (Manager/Admin Only)
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                reason:
+                  type: string
+      responses:
+        '200':
+          description: Recommendation marked as REJECTED.
+
+  /forecast/runs:
+    get:
+      summary: List Historical Forecast Runs
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: List of recorded forecast runs with model versions and dates.
+
+  /forecast/runs/{id}:
+    get:
+      summary: Get Forecast Run Details with Daily SKU Projections
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Forecast run details with itemized daily predicted demand.
+
 components:
   securitySchemes:
     BearerAuth:

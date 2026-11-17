@@ -151,6 +151,7 @@ StockPilot/
 - [Phase 4 Completion Report](file:///c:/Users/ayush/Desktop/StockPilot/docs/phase-reports/phase-04-report.md)
 - [Phase 5 Completion Report](file:///c:/Users/ayush/Desktop/StockPilot/docs/phase-reports/phase-05-report.md)
 - [Phase 6 Completion Report](file:///c:/Users/ayush/Desktop/StockPilot/docs/phase-reports/phase-06-report.md)
+- [Phase 7 Completion Report](file:///c:/Users/ayush/Desktop/StockPilot/docs/phase-reports/phase-07-report.md)
 
 ---
 

@@ -9,6 +9,7 @@ const inventoryRoutes = require('./inventoryRoutes');
 const salesRoutes = require('./salesRoutes');
 const purchaseOrderRoutes = require('./purchaseOrderRoutes');
 const analyticsRoutes = require('./analyticsRoutes');
+const forecastRoutes = require('./forecastRoutes');
 
 const router = express.Router();
 
@@ -22,5 +23,6 @@ router.use('/inventory', inventoryRoutes);
 router.use('/sales', salesRoutes);
 router.use('/purchase-orders', purchaseOrderRoutes);
 router.use('/analytics', analyticsRoutes);
+router.use('/forecast', forecastRoutes);
 
 module.exports = router;
