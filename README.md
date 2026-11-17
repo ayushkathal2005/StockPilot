@@ -69,9 +69,9 @@ graph TD
 
 ## Current Project Status
 
-- **Current Phase:** **Phase 0 — Complete (Repository Baseline, Project Charter & Architecture Freeze)**
-- **Next Phase:** Phase 1 — SQL Server Schema, Migrations, and Reproducible Seed Data *(Pending explicit user approval)*
-- **Application Implementation Status:** Architecture frozen, requirements finalized, data dictionary drafted. Application coding, database creation, and service implementation begin in Phase 1 and subsequent phases as per the strict phased execution plan.
+- **Current Phase:** **Phase 1 — Complete (SQL Server Schema, Migrations, Seed Data & Integrity Testing)**
+- **Next Phase:** Phase 2 — Express Backend Foundation, Database Access & Authentication *(Pending explicit user approval)*
+- **Database Implementation Status:** Microsoft SQL Server 2022 database (`StockPilotDB`) fully implemented with 15 normalized tables, versioned migrations (001–011), idempotent seeds (35 SKUs, initial sales, purchase orders across 4 lifecycle states), views (`vw_InventoryCurrentPosition`, `vw_ProductDailyDemand`, `vw_LowStockAlerts`), least-privilege security roles, and automated constraint/invariant test suites passing 100%.
 
 ---
 
@@ -102,8 +102,10 @@ StockPilot/
 - [System Architecture](file:///c:/Users/ayush/Desktop/StockPilot/docs/architecture.md)
 - [TPDS-III Module Mapping](file:///c:/Users/ayush/Desktop/StockPilot/docs/module-mapping.md)
 - [Data Dictionary & ERD Draft](file:///c:/Users/ayush/Desktop/StockPilot/docs/data-dictionary.md)
+- [Database Setup & Operations Guide](file:///c:/Users/ayush/Desktop/StockPilot/sql/README.md)
 - [Technical Decisions & Version Policy](file:///c:/Users/ayush/Desktop/StockPilot/docs/technical-decisions.md)
 - [Phase 0 Completion Report](file:///c:/Users/ayush/Desktop/StockPilot/docs/phase-reports/phase-00-report.md)
+- [Phase 1 Completion Report](file:///c:/Users/ayush/Desktop/StockPilot/docs/phase-reports/phase-01-report.md)
 
 ---
 
