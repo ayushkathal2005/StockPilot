@@ -167,9 +167,9 @@ docker exec -i stockpilot-mssql /opt/mssql-tools18/bin/sqlcmd -S localhost -U st
 ## 6. Git Details
 
 - **Phase Branch:** `phase/01-database-schema`
-- **Phase Commit SHA:** `PENDING_COMMIT`
-- **Phase Branch Push:** Confirmed
-- **Develop Merge Commit SHA:** `PENDING_MERGE`
+- **Phase Commit SHA:** `927aebc`
+- **Phase Branch Push:** Confirmed (`origin/phase/01-database-schema`)
+- **Develop Merge Commit SHA:** `19fee21`
 - **Completion Tag:** `phase-01-complete`
 - **Tag Push:** Confirmed
 
