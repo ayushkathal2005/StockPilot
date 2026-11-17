@@ -9,7 +9,7 @@ Rules:
 - Serializable via joblib for inference in the FastAPI ML service.
 """
 
-from typing import List, Dict, Any, Optional
+from typing import List, Dict, Any, Optional, Tuple
 import pandas as pd
 import numpy as np
 
