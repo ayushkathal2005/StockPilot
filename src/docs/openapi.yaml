@@ -1,0 +1,149 @@
+openapi: 3.0.3
+info:
+  title: StockPilot API Specification
+  version: 1.0.0
+  description: RESTful API for StockPilot Inventory Operations, RBAC Authentication, and Health Monitoring.
+servers:
+  - url: http://localhost:3000/api
+    description: Local development server
+paths:
+  /health:
+    get:
+      summary: Service Health & Database Readiness Check
+      description: Returns health status of Express server and Microsoft SQL Server connection pool.
+      responses:
+        '200':
+          description: Service and database are UP and responsive.
+        '503':
+          description: Database or critical dependency is DOWN.
+
+  /auth/login:
+    post:
+      summary: Authenticate User
+      description: Validates user credentials, returns JWT bearer token, and sets secure HTTP-only cookie.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: admin@stockpilot.io
+                password:
+                  type: string
+                  example: Password123!
+      responses:
+        '200':
+          description: Authentication successful. Returns token and user object.
+        '400':
+          description: Validation error.
+        '401':
+          description: Invalid email or password.
+        '403':
+          description: Account deactivated.
+
+  /auth/logout:
+    post:
+      summary: Log Out User
+      description: Invalidates active session cookie.
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Logged out successfully.
+
+  /auth/me:
+    get:
+      summary: Get Current User Profile
+      description: Returns profile and roles of currently authenticated user.
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Authenticated user details.
+        '401':
+          description: Missing or invalid token.
+
+  /users:
+    get:
+      summary: List Users (Admin Only)
+      description: Returns list of system users. Requires Admin role.
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: List of user accounts.
+        '403':
+          description: Forbidden - Insufficient permissions.
+    post:
+      summary: Create New User (Admin Only)
+      description: Creates a new operator with assigned RBAC role.
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password, fullName, role]
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  minLength: 8
+                fullName:
+                  type: string
+                role:
+                  type: string
+                  enum: [Admin, Manager, Staff]
+      responses:
+        '201':
+          description: User created.
+        '409':
+          description: Duplicate email address.
+
+  /users/{id}:
+    get:
+      summary: Get User By ID (Admin Only)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: User found.
+        '404':
+          description: User not found.
+    delete:
+      summary: Deactivate User (Admin Only)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: User soft-deactivated.
+        '400':
+          description: Cannot deactivate self.
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
