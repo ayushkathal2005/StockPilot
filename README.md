@@ -4,6 +4,9 @@
 
 StockPilot is an enterprise-grade inventory operations and decision-support platform designed to streamline warehouse management, sales tracking, purchase order fulfillment, demand forecasting, and executive analytics for SMB retailers and distributors.
 
+> [!IMPORTANT]
+> **Complete Engineering & Architecture Knowledge Base:** For the exhaustive system architecture, database schemas, machine learning formulas, REST API references, and onboarding instructions for teammates and AI agents, see **[PROJECT_GUIDE.md](./PROJECT_GUIDE.md)**.
+
 ---
 
 ## Academic Alignment: TPDS-III
