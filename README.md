@@ -69,9 +69,9 @@ graph TD
 
 ## Current Project Status
 
-- **Current Phase:** **Phase 5 — Complete (Metabase & SQL Server Business Intelligence Dashboards)**
-- **Next Phase:** Phase 6 — ML Dataset Engineering, Baseline Models & XGBoost Training *(Pending explicit user approval)*
-- **Business Intelligence Status:** TPDS-III Module 1 fulfilled. Metabase v0.50.32 deployed on port 3001 via Docker with dedicated least-privilege read-only SQL Server account (`stockpilot_bi_readonly`). Implemented 5 specialized BI reporting views in SQL Server (`vw_BI_ExecutiveKPIs`, `vw_BI_DailySalesTrends`, `vw_BI_CategoryPerformance`, `vw_BI_TopProducts`, `vw_BI_SupplierPerformance`), comprehensive in-app analytics dashboard (`public/analytics.html`), KPI data dictionary with mathematical definitions and reconciliation audits, and 61/61 automated test cases passing (100%).
+- **Current Phase:** **Phase 8 — Complete (Dockerization and Complete Local Environment)**
+- **Next Phase:** Phase 9 — End-to-End Testing, Security Review & Final Submission Package *(Pending explicit user approval)*
+- **Infrastructure Status:** TPDS-III Module 4 container orchestration fulfilled. Multi-container production-grade `docker-compose.yml` orchestrates all 4 platform tiers: Microsoft SQL Server 2022 (`stockpilot-mssql`), Python 3.11 FastAPI ML Service (`stockpilot-ml-service`), Node.js 20 Express Application Backend (`stockpilot-backend`), and Metabase BI Analytics (`stockpilot-metabase`). Multi-stage builds, non-root user execution (`UID 1000:stockpilot`), active health check probes, declarative dependency waiting chains, and robust local persistence volumes are fully validated and documented in `docs/docker-deployment-guide.md`. Automated test suite: 95/95 tests passing (100%).
 
 ---
 
@@ -142,6 +142,7 @@ StockPilot/
 - [Data Dictionary & ERD Draft](file:///c:/Users/ayush/Desktop/StockPilot/docs/data-dictionary.md)
 - [BI KPI Definitions & Reconciliation Guide](file:///c:/Users/ayush/Desktop/StockPilot/docs/bi-data-dictionary-and-kpis.md)
 - [ML Demand Forecasting Model Card](file:///c:/Users/ayush/Desktop/StockPilot/docs/ml-model-card.md)
+- [Docker Deployment Guide & Runbook](file:///c:/Users/ayush/Desktop/StockPilot/docs/docker-deployment-guide.md)
 - [Database Setup & Operations Guide](file:///c:/Users/ayush/Desktop/StockPilot/sql/README.md)
 - [Technical Decisions & Version Policy](file:///c:/Users/ayush/Desktop/StockPilot/docs/technical-decisions.md)
 - [Phase 0 Completion Report](file:///c:/Users/ayush/Desktop/StockPilot/docs/phase-reports/phase-00-report.md)
@@ -152,6 +153,7 @@ StockPilot/
 - [Phase 5 Completion Report](file:///c:/Users/ayush/Desktop/StockPilot/docs/phase-reports/phase-05-report.md)
 - [Phase 6 Completion Report](file:///c:/Users/ayush/Desktop/StockPilot/docs/phase-reports/phase-06-report.md)
 - [Phase 7 Completion Report](file:///c:/Users/ayush/Desktop/StockPilot/docs/phase-reports/phase-07-report.md)
+- [Phase 8 Completion Report](file:///c:/Users/ayush/Desktop/StockPilot/docs/phase-reports/phase-08-report.md)
 
 ---
 
