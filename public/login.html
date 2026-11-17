@@ -3,107 +3,66 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>StockPilot - Login</title>
+  <title>StockPilot — Sign In</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="/css/style.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
 </head>
-<body class="bg-light">
+<body style="background-color: var(--sp-bg); min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 1.5rem;">
+  <!-- Toast Container -->
   <div id="toast-container"></div>
 
-  <div class="container py-5">
-    <div class="row justify-content-center">
-      <div class="col-md-6 col-lg-5">
-        <div class="card shadow-sm border-0 login-card">
-          <div class="card-body p-4 p-sm-5">
-            <div class="text-center mb-4">
-              <span class="fs-1">📦</span>
-              <h2 class="fw-bold mt-2">StockPilot</h2>
-              <p class="text-muted">Sign in to manage inventory & analytics</p>
-            </div>
+  <div style="width: 100%; max-width: 420px;">
+    <!-- Brand Header -->
+    <div class="text-center mb-4">
+      <div class="brand-logo mx-auto mb-2" style="width: 36px; height: 36px; font-size: 16px;">SP</div>
+      <h2 class="fw-bold mb-1" style="font-size: 1.35rem;">StockPilot</h2>
+      <p class="text-secondary small mb-0">Production Retail Management & Supply Chain BI</p>
+    </div>
 
-            <!-- Error Banner -->
-            <div id="error-alert" class="alert alert-danger d-none" role="alert"></div>
+    <!-- Login Card -->
+    <div class="sp-card">
+      <div class="sp-card-body p-4">
+        <!-- Error Banner -->
+        <div id="error-alert" class="alert alert-danger d-none py-2 px-3 mb-3 small" role="alert"></div>
 
-            <form id="login-form">
-              <div class="mb-3">
-                <label for="email" class="form-label fw-semibold">Email address</label>
-                <input type="email" class="form-control" id="email" required placeholder="name@company.com" autocomplete="username">
-              </div>
-
-              <div class="mb-3">
-                <label for="password" class="form-label fw-semibold">Password</label>
-                <input type="password" class="form-control" id="password" required placeholder="••••••••" autocomplete="current-password">
-              </div>
-
-              <button type="submit" id="submit-btn" class="btn btn-primary w-100 py-2 fw-semibold">
-                Sign In
-              </button>
-            </form>
-
-            <hr class="my-4">
-
-            <!-- Demo Account Fast Selection -->
-            <div>
-              <p class="text-muted small text-center mb-2">Fast Demo Login (Seeded Roles):</p>
-              <div class="d-flex gap-2 justify-content-center">
-                <button type="button" class="btn btn-outline-secondary btn-sm" onclick="setDemoAccount('admin@stockpilot.io')">Admin</button>
-                <button type="button" class="btn btn-outline-secondary btn-sm" onclick="setDemoAccount('manager@stockpilot.io')">Manager</button>
-                <button type="button" class="btn btn-outline-secondary btn-sm" onclick="setDemoAccount('staff@stockpilot.io')">Staff</button>
-              </div>
-            </div>
+        <form id="login-form">
+          <div class="mb-3">
+            <label for="email" class="form-label small fw-semibold">Email Address</label>
+            <input type="email" class="form-control form-control-sm" id="email" required placeholder="name@stockpilot.io" autocomplete="username">
           </div>
-        </div>
 
-        <div class="text-center text-muted small mt-3">
-          StockPilot &bull; TPDS-III Integrated Enterprise System
+          <div class="mb-3">
+            <label for="password" class="form-label small fw-semibold">Password</label>
+            <input type="password" class="form-control form-control-sm" id="password" required placeholder="••••••••" autocomplete="current-password">
+          </div>
+
+          <button type="submit" id="submit-btn" class="btn btn-primary w-100 py-2 btn-sm fw-semibold">
+            Sign In
+          </button>
+        </form>
+
+        <div class="border-top my-3"></div>
+
+        <!-- Fast Demo Switcher -->
+        <div>
+          <p class="text-secondary small text-center mb-2" style="font-size: 11.5px;">Click to autofill demo credentials:</p>
+          <div class="d-flex gap-2 justify-content-center">
+            <button type="button" class="btn btn-sm btn-secondary flex-fill" onclick="setDemoAccount('admin@stockpilot.io')">Admin</button>
+            <button type="button" class="btn btn-sm btn-secondary flex-fill" onclick="setDemoAccount('manager@stockpilot.io')">Manager</button>
+            <button type="button" class="btn btn-sm btn-secondary flex-fill" onclick="setDemoAccount('staff@stockpilot.io')">Staff</button>
+          </div>
         </div>
       </div>
     </div>
+
+    <div class="text-center text-secondary small mt-3" style="font-size: 11.5px;">
+      StockPilot Enterprise &bull; MS SQL Server 2022 &bull; XGBoost ML
+    </div>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="/js/api.js"></script>
-  <script src="/js/auth.js"></script>
-  <script>
-    // Check if redirect due to expired session
-    const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get('expired')) {
-      const alert = document.getElementById('error-alert');
-      alert.textContent = 'Your session has expired. Please sign in again.';
-      alert.classList.remove('d-none');
-    }
-
-    function setDemoAccount(email) {
-      document.getElementById('email').value = email;
-      document.getElementById('password').value = 'Password123!';
-    }
-
-    document.getElementById('login-form').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const alert = document.getElementById('error-alert');
-      const submitBtn = document.getElementById('submit-btn');
-      
-      alert.classList.add('d-none');
-      submitBtn.disabled = true;
-      submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Signing in...';
-
-      const email = document.getElementById('email').value.trim();
-      const password = document.getElementById('password').value;
-
-      try {
-        const response = await api.post('/auth/login', { email, password });
-        if (response && response.success) {
-          api.setToken(response.data.token);
-          auth.setUser(response.data.user);
-          window.location.href = '/products.html';
-        }
-      } catch (err) {
-        alert.textContent = err.message || 'Login failed. Please verify credentials.';
-        alert.classList.remove('d-none');
-      } finally {
-        submitBtn.disabled = false;
-        submitBtn.textContent = 'Sign In';
-      }
-    });
-  </script>
+  <script src="/js/login.js"></script>
 </body>
 </html>

@@ -3,268 +3,277 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>StockPilot - Business Intelligence Dashboards</title>
+  <title>StockPilot — BI Analytics</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="/css/style.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body>
+  <!-- Toast Container -->
   <div id="toast-container"></div>
-  <div id="navbar-placeholder"></div>
 
-  <main class="container-fluid py-4 px-md-5">
-    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-2">
-      <div>
-        <h2 class="fw-bold mb-0">Business Intelligence & Executive Analytics</h2>
-        <p class="text-muted mb-0">TPDS-III Module 1 — Real-time SQL Server reporting views & Metabase BI integration</p>
-      </div>
-      <div class="d-flex gap-2">
-        <a href="http://localhost:3001" target="_blank" class="btn btn-outline-primary fw-semibold">
-          <span class="me-1">📊</span> Launch Metabase (Port 3001)
-        </a>
-      </div>
-    </div>
+  <!-- Global Layout Wrapper -->
+  <div id="app-layout">
+    <div id="navbar-placeholder"></div>
 
-    <!-- Metabase Integration Info Alert -->
-    <div class="alert alert-info d-flex align-items-center justify-content-between p-3 mb-4 rounded shadow-sm">
-      <div class="d-flex align-items-center">
-        <span class="fs-3 me-3">ℹ️</span>
-        <div>
-          <h6 class="fw-bold mb-1">Metabase Read-Only BI Connection Active</h6>
-          <p class="small mb-0 text-muted">
-            Host: <code>stockpilot-mssql:1433</code> | Database: <code>StockPilotDB</code> | User: <code>stockpilot_bi_readonly</code> (Read-only least privilege, zero write access).
-          </p>
-        </div>
-      </div>
-      <div>
-        <a href="/docs/bi-data-dictionary-and-kpis.md" target="_blank" class="btn btn-sm btn-info text-white fw-semibold">View KPI Data Dictionary</a>
-      </div>
-    </div>
-
-    <!-- Analytics Navigation Tabs -->
-    <ul class="nav nav-tabs mb-4" id="biTabs" role="tablist">
-      <li class="nav-item">
-        <button class="nav-link active fw-bold" id="tab-exec" data-bs-toggle="tab" data-bs-target="#pane-exec">
-          1. Executive Overview
-        </button>
-      </li>
-      <li class="nav-item">
-        <button class="nav-link fw-bold" id="tab-sales" data-bs-toggle="tab" data-bs-target="#pane-sales" onclick="loadSalesTrends()">
-          2. Sales Analytics
-        </button>
-      </li>
-      <li class="nav-item">
-        <button class="nav-link fw-bold" id="tab-cat" data-bs-toggle="tab" data-bs-target="#pane-cat" onclick="loadCategoryPerformance()">
-          3. Category Performance
-        </button>
-      </li>
-      <li class="nav-item">
-        <button class="nav-link fw-bold" id="tab-top" data-bs-toggle="tab" data-bs-target="#pane-top" onclick="loadTopProducts()">
-          4. Top Products
-        </button>
-      </li>
-      <li class="nav-item">
-        <button class="nav-link fw-bold" id="tab-sup" data-bs-toggle="tab" data-bs-target="#pane-sup" onclick="loadSupplierPerformance()">
-          5. Supplier & Spend
-        </button>
-      </li>
-    </ul>
-
-    <!-- Tabs Content -->
-    <div class="tab-content">
-      <!-- 1. Executive Overview Pane -->
-      <div class="tab-pane fade show active" id="pane-exec">
-        <div class="row g-3 mb-4">
-          <div class="col-12 col-sm-6 col-xl-3">
-            <div class="card p-3 shadow-sm border-0 border-start border-primary border-4">
-              <div class="text-muted small fw-semibold">TOTAL GROSS REVENUE</div>
-              <div class="fs-3 fw-bold text-primary" id="kpi-revenue">-</div>
-              <small class="text-muted" id="kpi-tx-count">- transactions</small>
-            </div>
+    <div id="main-wrapper">
+      <main id="content-area">
+        <!-- Page Header -->
+        <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-2">
+          <div>
+            <h1 class="page-title">Business Intelligence & Executive Analytics</h1>
+            <p class="page-subtitle">SQL Server analytical data marts, margin reporting, and Metabase BI connectivity</p>
           </div>
-          <div class="col-12 col-sm-6 col-xl-3">
-            <div class="card p-3 shadow-sm border-0 border-start border-success border-4">
-              <div class="text-muted small fw-semibold">TOTAL GROSS PROFIT</div>
-              <div class="fs-3 fw-bold text-success" id="kpi-profit">-</div>
-              <small class="text-success fw-semibold" id="kpi-margin">- gross margin</small>
-            </div>
-          </div>
-          <div class="col-12 col-sm-6 col-xl-3">
-            <div class="card p-3 shadow-sm border-0 border-start border-info border-4">
-              <div class="text-muted small fw-semibold">INVENTORY ASSET VALUE</div>
-              <div class="fs-3 fw-bold text-info" id="kpi-inv-val">-</div>
-              <small class="text-muted" id="kpi-active-skus">- active SKUs</small>
-            </div>
-          </div>
-          <div class="col-12 col-sm-6 col-xl-3">
-            <div class="card p-3 shadow-sm border-0 border-start border-warning border-4">
-              <div class="text-muted small fw-semibold">TOTAL PURCHASING SPEND</div>
-              <div class="fs-3 fw-bold text-warning" id="kpi-spend">-</div>
-              <small class="text-muted" id="kpi-open-pos">- open POs</small>
-            </div>
+          <div class="d-flex gap-2">
+            <a href="http://localhost:3001" target="_blank" class="btn btn-sm btn-primary">
+              <i data-lucide="external-link"></i>
+              <span>Open Metabase (Port 3001)</span>
+            </a>
           </div>
         </div>
 
-        <div class="row g-4">
-          <div class="col-lg-6">
-            <div class="card p-4 shadow-sm h-100">
-              <h5 class="fw-bold mb-3">Inventory Health Breakdown</h5>
-              <div class="p-3 bg-light rounded mb-3">
-                <div class="d-flex justify-content-between mb-2">
-                  <span>Healthy Stock SKUs:</span>
-                  <span class="fw-bold text-success" id="health-healthy">-</span>
-                </div>
-                <div class="d-flex justify-content-between mb-2">
-                  <span>Low Stock Alert SKUs:</span>
-                  <span class="fw-bold text-warning" id="health-low">-</span>
-                </div>
-                <div class="d-flex justify-content-between">
-                  <span>Critical Stockout SKUs:</span>
-                  <span class="fw-bold text-danger" id="health-out">-</span>
+        <!-- Metabase Integration Status Card -->
+        <div class="sp-card mb-4" style="background-color: #FAFCFA;">
+          <div class="sp-card-body p-3 d-flex flex-wrap align-items-center justify-content-between gap-3">
+            <div class="d-flex align-items-center gap-3">
+              <div class="rounded-circle p-2" style="background: rgba(54, 92, 80, 0.1); color: var(--sp-primary);">
+                <i data-lucide="database" style="width:20px;height:20px;"></i>
+              </div>
+              <div>
+                <div class="fw-bold text-dark">Live Metabase Analytics Connection</div>
+                <div class="small text-secondary font-mono">Host: stockpilot-mssql:1433 | DB: StockPilotDB | Mode: Read-Only OLAP Views</div>
+              </div>
+            </div>
+            <span class="badge badge-success px-2 py-1">Connected & Synchronized</span>
+          </div>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <ul class="nav nav-pills mb-4" id="biTabs" role="tablist">
+          <li class="nav-item">
+            <button class="nav-link active btn-sm" id="tab-exec" data-bs-toggle="pill" data-bs-target="#pane-exec">
+              <i data-lucide="pie-chart"></i> Executive KPIs
+            </button>
+          </li>
+          <li class="nav-item">
+            <button class="nav-link btn-sm" id="tab-trends" data-bs-toggle="pill" data-bs-target="#pane-trends" onclick="loadSalesTrends()">
+              <i data-lucide="trending-up"></i> Sales Trends
+            </button>
+          </li>
+          <li class="nav-item">
+            <button class="nav-link btn-sm" id="tab-cat" data-bs-toggle="pill" data-bs-target="#pane-cat" onclick="loadCategoryPerformance()">
+              <i data-lucide="layers"></i> Category Performance
+            </button>
+          </li>
+          <li class="nav-item">
+            <button class="nav-link btn-sm" id="tab-top" data-bs-toggle="pill" data-bs-target="#pane-top" onclick="loadTopProducts()">
+              <i data-lucide="star"></i> Top Products
+            </button>
+          </li>
+          <li class="nav-item">
+            <button class="nav-link btn-sm" id="tab-sup" data-bs-toggle="pill" data-bs-target="#pane-sup" onclick="loadSupplierPerformance()">
+              <i data-lucide="truck"></i> Supplier Performance
+            </button>
+          </li>
+        </ul>
+
+        <!-- Tab Content Panes -->
+        <div class="tab-content">
+          <!-- 1. Executive KPIs Pane -->
+          <div class="tab-pane fade show active" id="pane-exec">
+            <div class="row g-3 mb-4">
+              <div class="col-sm-6 col-xl-3">
+                <div class="kpi-card">
+                  <div class="kpi-header">
+                    <span class="kpi-label">Gross Revenue</span>
+                    <i data-lucide="dollar-sign" class="kpi-icon"></i>
+                  </div>
+                  <div class="kpi-value" id="kpi-revenue">-</div>
+                  <div class="kpi-subtext" id="kpi-tx-count">Loading metrics...</div>
                 </div>
               </div>
-              <p class="small text-muted mb-0">
-                Formula verified from <code>dbo.vw_BI_ExecutiveKPIs</code> reconciling against current <code>dbo.Inventory</code> on-hand balances.
-              </p>
+              <div class="col-sm-6 col-xl-3">
+                <div class="kpi-card">
+                  <div class="kpi-header">
+                    <span class="kpi-label">Gross Profit</span>
+                    <i data-lucide="trending-up" class="kpi-icon"></i>
+                  </div>
+                  <div class="kpi-value" id="kpi-profit">-</div>
+                  <div class="kpi-subtext" id="kpi-margin">-</div>
+                </div>
+              </div>
+              <div class="col-sm-6 col-xl-3">
+                <div class="kpi-card">
+                  <div class="kpi-header">
+                    <span class="kpi-label">Inventory Valuation</span>
+                    <i data-lucide="boxes" class="kpi-icon"></i>
+                  </div>
+                  <div class="kpi-value" id="kpi-inv-val">-</div>
+                  <div class="kpi-subtext" id="kpi-active-skus">-</div>
+                </div>
+              </div>
+              <div class="col-sm-6 col-xl-3">
+                <div class="kpi-card">
+                  <div class="kpi-header">
+                    <span class="kpi-label">Purchasing Spend</span>
+                    <i data-lucide="shopping-bag" class="kpi-icon"></i>
+                  </div>
+                  <div class="kpi-value" id="kpi-spend">-</div>
+                  <div class="kpi-subtext" id="kpi-open-pos">-</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row g-3">
+              <!-- Inventory Health Distribution -->
+              <div class="col-lg-6">
+                <div class="sp-card h-100">
+                  <div class="sp-card-header">
+                    <h3 class="sp-card-title">Inventory Health Breakdown</h3>
+                  </div>
+                  <div class="sp-card-body p-3">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                      <span class="small fw-semibold text-secondary">Healthy (Above Safety Stock)</span>
+                      <span class="badge badge-success num" id="health-healthy">-</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                      <span class="small fw-semibold text-secondary">Low Stock (At / Below Threshold)</span>
+                      <span class="badge badge-warning num" id="health-low">-</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center">
+                      <span class="small fw-semibold text-secondary">Out of Stock (Zero Units)</span>
+                      <span class="badge badge-danger num" id="health-out">-</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Revenue Reconciliation -->
+              <div class="col-lg-6">
+                <div class="sp-card h-100">
+                  <div class="sp-card-header">
+                    <h3 class="sp-card-title">Financial Reconciliation & Margin Audit</h3>
+                  </div>
+                  <div class="sp-card-body p-3">
+                    <div class="d-flex justify-content-between py-1 border-bottom">
+                      <span class="small text-secondary">Total Net Subtotal:</span>
+                      <span class="num fw-bold" id="rec-subtotal">-</span>
+                    </div>
+                    <div class="d-flex justify-content-between py-1 border-bottom">
+                      <span class="small text-secondary">Total Tax Collected:</span>
+                      <span class="num fw-bold" id="rec-tax">-</span>
+                    </div>
+                    <div class="d-flex justify-content-between py-1 border-bottom">
+                      <span class="small text-secondary">Gross Revenue:</span>
+                      <span class="num fw-bold text-primary" id="rec-total">-</span>
+                    </div>
+                    <div class="d-flex justify-content-between py-1 border-bottom">
+                      <span class="small text-secondary">Cost of Goods Sold (COGS):</span>
+                      <span class="num fw-bold text-danger" id="rec-cogs">-</span>
+                    </div>
+                    <div class="d-flex justify-content-between py-1">
+                      <span class="small text-secondary">Gross Margin %:</span>
+                      <span class="num fw-bold text-success" id="rec-margin">-</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 
-          <div class="col-lg-6">
-            <div class="card p-4 shadow-sm h-100">
-              <h5 class="fw-bold mb-3">Financial Reconciliation Audit</h5>
+          <!-- 2. Sales Trends Pane -->
+          <div class="tab-pane fade" id="pane-trends">
+            <div class="sp-card">
               <div class="table-responsive">
-                <table class="table table-sm align-middle mb-0">
-                  <tbody>
+                <table class="sp-table align-middle">
+                  <thead>
                     <tr>
-                      <td class="text-muted">Total Net Sales (Subtotal)</td>
-                      <td class="text-end fw-bold" id="rec-subtotal">-</td>
+                      <th>Business Date</th>
+                      <th class="num text-center">Orders</th>
+                      <th class="num text-center">Units Sold</th>
+                      <th class="num text-end">Subtotal</th>
+                      <th class="num text-end">Tax</th>
+                      <th class="num text-end">Total Revenue</th>
+                      <th class="num text-end">Gross Profit</th>
+                      <th class="num text-end">Margin %</th>
                     </tr>
+                  </thead>
+                  <tbody id="sales-trends-tbody"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- 3. Category Performance Pane -->
+          <div class="tab-pane fade" id="pane-cat">
+            <div class="sp-card">
+              <div class="table-responsive">
+                <table class="sp-table align-middle">
+                  <thead>
                     <tr>
-                      <td class="text-muted">Total Tax Collected (5%)</td>
-                      <td class="text-end fw-semibold" id="rec-tax">-</td>
+                      <th>Category</th>
+                      <th class="num text-center">Active Products</th>
+                      <th class="num text-center">Units Sold</th>
+                      <th class="num text-end">Category Revenue</th>
+                      <th class="num text-end">Gross Profit</th>
+                      <th class="num text-end">Inventory Valuation</th>
                     </tr>
+                  </thead>
+                  <tbody id="cat-tbody"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- 4. Top Products Pane -->
+          <div class="tab-pane fade" id="pane-top">
+            <div class="sp-card">
+              <div class="table-responsive">
+                <table class="sp-table align-middle">
+                  <thead>
                     <tr>
-                      <td class="text-muted">Total Gross Receipts</td>
-                      <td class="text-end fw-bold text-primary" id="rec-total">-</td>
+                      <th>Product & SKU</th>
+                      <th>Category</th>
+                      <th class="num text-end">Selling Price</th>
+                      <th class="num text-end">Unit Cost</th>
+                      <th class="num text-center">Units Sold</th>
+                      <th class="num text-end">Sales Revenue</th>
+                      <th class="num text-end">Gross Profit</th>
+                      <th class="num text-center">On-Hand Stock</th>
                     </tr>
+                  </thead>
+                  <tbody id="top-tbody"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- 5. Supplier Performance Pane -->
+          <div class="tab-pane fade" id="pane-sup">
+            <div class="sp-card">
+              <div class="table-responsive">
+                <table class="sp-table align-middle">
+                  <thead>
                     <tr>
-                      <td class="text-muted">Cost of Goods Sold (COGS at sale)</td>
-                      <td class="text-end text-danger fw-semibold" id="rec-cogs">-</td>
+                      <th>Supplier Name</th>
+                      <th>Contact Email</th>
+                      <th class="num text-center">Lead Time</th>
+                      <th class="num text-center">Total POs</th>
+                      <th class="num text-end">Total Spend</th>
+                      <th class="num text-center">Ordered Units</th>
+                      <th class="num text-center">Received Units</th>
+                      <th class="num text-center">Fulfillment Rate</th>
                     </tr>
-                    <tr class="table-success">
-                      <td class="fw-bold">Net Realized Gross Margin</td>
-                      <td class="text-end fw-bold text-success" id="rec-margin">-</td>
-                    </tr>
-                  </tbody>
+                  </thead>
+                  <tbody id="sup-tbody"></tbody>
                 </table>
               </div>
             </div>
           </div>
         </div>
-      </div>
-
-      <!-- 2. Sales Analytics Pane -->
-      <div class="tab-pane fade" id="pane-sales">
-        <div class="card overflow-hidden">
-          <div class="p-3 bg-light border-bottom">
-            <h6 class="fw-bold mb-0">Daily Sales & Demand Velocity Trend</h6>
-          </div>
-          <div class="table-responsive">
-            <table class="table table-hover align-middle mb-0" id="sales-trends-table">
-              <thead class="table-light">
-                <tr>
-                  <th>Business Date</th>
-                  <th class="text-center">Transactions</th>
-                  <th class="text-center">Units Sold</th>
-                  <th class="text-end">Subtotal</th>
-                  <th class="text-end">Tax</th>
-                  <th class="text-end">Gross Revenue</th>
-                  <th class="text-end">Gross Profit</th>
-                  <th class="text-end">Profit Margin</th>
-                </tr>
-              </thead>
-              <tbody id="sales-trends-tbody"></tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-
-      <!-- 3. Category Performance Pane -->
-      <div class="tab-pane fade" id="pane-cat">
-        <div class="card overflow-hidden">
-          <div class="p-3 bg-light border-bottom">
-            <h6 class="fw-bold mb-0">Sales Revenue, Gross Profit & Valuation by Category</h6>
-          </div>
-          <div class="table-responsive">
-            <table class="table table-hover align-middle mb-0" id="cat-table">
-              <thead class="table-light">
-                <tr>
-                  <th>Category Name</th>
-                  <th class="text-center">Active Products</th>
-                  <th class="text-center">Units Sold</th>
-                  <th class="text-end">Category Revenue</th>
-                  <th class="text-end">Gross Profit</th>
-                  <th class="text-end">Stock Valuation</th>
-                </tr>
-              </thead>
-              <tbody id="cat-tbody"></tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-
-      <!-- 4. Top Products Pane -->
-      <div class="tab-pane fade" id="pane-top">
-        <div class="card overflow-hidden">
-          <div class="p-3 bg-light border-bottom">
-            <h6 class="fw-bold mb-0">Top Products Ranked by Sales Volume and Revenue</h6>
-          </div>
-          <div class="table-responsive">
-            <table class="table table-hover align-middle mb-0" id="top-table">
-              <thead class="table-light">
-                <tr>
-                  <th>Product Name</th>
-                  <th>Category</th>
-                  <th class="text-end">Unit Price</th>
-                  <th class="text-end">Unit Cost</th>
-                  <th class="text-center">Units Sold</th>
-                  <th class="text-end">Total Revenue</th>
-                  <th class="text-end">Gross Profit</th>
-                  <th class="text-center">Stock On Hand</th>
-                </tr>
-              </thead>
-              <tbody id="top-tbody"></tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-
-      <!-- 5. Supplier Performance Pane -->
-      <div class="tab-pane fade" id="pane-sup">
-        <div class="card overflow-hidden">
-          <div class="p-3 bg-light border-bottom">
-            <h6 class="fw-bold mb-0">Supplier Spend, Purchase Volume & Fulfillment Rates</h6>
-          </div>
-          <div class="table-responsive">
-            <table class="table table-hover align-middle mb-0" id="sup-table">
-              <thead class="table-light">
-                <tr>
-                  <th>Supplier Name</th>
-                  <th>Contact Email</th>
-                  <th class="text-center">Lead Time</th>
-                  <th class="text-center">POs Created</th>
-                  <th class="text-end">Total PO Spend</th>
-                  <th class="text-center">Ordered Qty</th>
-                  <th class="text-center">Received Qty</th>
-                  <th class="text-center">Fulfillment Rate</th>
-                </tr>
-              </thead>
-              <tbody id="sup-tbody"></tbody>
-            </table>
-          </div>
-        </div>
-      </div>
+      </main>
     </div>
-  </main>
+  </div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="/js/api.js"></script>

@@ -127,43 +127,47 @@ function renderProductsTable(products) {
 
   emptyEl.classList.add('d-none');
   tbody.innerHTML = products.map(p => {
-    const badgeClass = p.stock_health_status === 'OPTIMAL' ? 'badge-optimal' :
-                       p.stock_health_status === 'LOW_STOCK' ? 'badge-low-stock' : 'badge-out-of-stock';
+    const badgeClass = p.stock_health_status === 'OPTIMAL' ? 'badge-success' :
+                       p.stock_health_status === 'LOW_STOCK' ? 'badge-warning' : 'badge-danger';
     const statusLabel = p.stock_health_status === 'OPTIMAL' ? 'In Stock' :
                         p.stock_health_status === 'LOW_STOCK' ? 'Low Stock' : 'Out of Stock';
 
     return `
       <tr>
-        <td class="fw-semibold text-primary font-monospace">${p.sku}</td>
+        <td class="fw-semibold font-mono text-primary">${p.sku}</td>
         <td>
-          <div class="fw-bold">${p.product_name}</div>
-          <small class="text-muted">${p.supplier_name || 'No preferred supplier'}</small>
+          <div class="fw-semibold">${p.product_name}</div>
+          <small class="text-secondary">${p.supplier_name || 'No preferred supplier'}</small>
         </td>
-        <td><span class="badge bg-light text-dark border">${p.category_name}</span></td>
-        <td class="text-end">$${parseFloat(p.cost_price).toFixed(2)}</td>
-        <td class="text-end fw-semibold">$${parseFloat(p.selling_price).toFixed(2)}</td>
-        <td class="text-center">
+        <td><span class="badge badge-neutral">${p.category_name}</span></td>
+        <td class="text-end num">$${parseFloat(p.cost_price).toFixed(2)}</td>
+        <td class="text-end num fw-semibold">$${parseFloat(p.selling_price).toFixed(2)}</td>
+        <td class="text-center num">
           <span class="fw-bold">${p.on_hand_quantity}</span>
         </td>
         <td>
-          <span class="badge ${badgeClass} px-2 py-1">${statusLabel}</span>
+          <span class="badge ${badgeClass}">${statusLabel}</span>
         </td>
         <td class="text-end">
-          <button class="btn btn-outline-secondary btn-sm me-1" onclick="viewProductDetails(${p.product_id})" title="Details">
-            👁️
+          <button class="btn btn-sm btn-secondary p-1 me-1" onclick="viewProductDetails(${p.product_id})" title="Details">
+            <i data-lucide="eye" style="width:14px;height:14px;"></i>
           </button>
           ${isManagerOrAdmin ? `
-            <button class="btn btn-outline-primary btn-sm me-1" onclick="openEditProductModal(${p.product_id})" title="Edit">
-              ✏️
+            <button class="btn btn-sm btn-secondary p-1 me-1" onclick="openEditProductModal(${p.product_id})" title="Edit">
+              <i data-lucide="edit-2" style="width:14px;height:14px;"></i>
             </button>
-            <button class="btn btn-outline-danger btn-sm" onclick="deactivateProduct(${p.product_id}, '${p.sku}')" title="Deactivate">
-              🗑️
+            <button class="btn btn-sm btn-secondary p-1 text-danger" onclick="deactivateProduct(${p.product_id}, '${p.sku}')" title="Deactivate">
+              <i data-lucide="trash-2" style="width:14px;height:14px;"></i>
             </button>
           ` : ''}
         </td>
       </tr>
     `;
   }).join('');
+
+  if (window.lucide && typeof window.lucide.createIcons === 'function') {
+    window.lucide.createIcons();
+  }
 }
 
 function openAddProductModal() {

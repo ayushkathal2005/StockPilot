@@ -7,14 +7,14 @@ let allRecommendations = [];
 let currentApproveRec = null;
 
 document.addEventListener('DOMContentLoaded', async () => {
-  // Check auth and permissions
-  if (typeof checkAuth === 'function') {
-    const user = await checkAuth();
-    if (!user) return;
-    if (user.role === 'Staff') {
-      showAlert('Access restricted. Replenishment management requires Manager or Admin role.', 'warning');
-      document.getElementById('btn-generate-forecast').disabled = true;
-    }
+  if (!auth.requireAuth()) return;
+  auth.renderNavbar('recommendations');
+
+  const user = auth.getUser();
+  if (user && user.role === 'Staff') {
+    showAlert('Access restricted. Replenishment management requires Manager or Admin role.', 'warning');
+    const genBtn = document.getElementById('btn-generate-forecast');
+    if (genBtn) genBtn.disabled = true;
   }
 
   // Load initial data
