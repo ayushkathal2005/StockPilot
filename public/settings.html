@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StockPilot — System Settings</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+  <!-- Toast Container -->
+  <div id="toast-container"></div>
+
+  <!-- Global Layout Wrapper -->
+  <div id="app-layout">
+    <div id="navbar-placeholder"></div>
+
+    <div id="main-wrapper">
+      <main id="content-area">
+        <!-- Page Header -->
+        <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-2">
+          <div>
+            <h1 class="page-title">System Settings & Diagnostics</h1>
+            <p class="page-subtitle">Store parameters, database operational health, and user profile management</p>
+          </div>
+        </div>
+
+        <div class="row g-4">
+          <!-- Left Column: Business & Profile -->
+          <div class="col-lg-6">
+            <!-- User Profile Card -->
+            <div class="sp-card mb-4">
+              <div class="sp-card-header">
+                <h3 class="sp-card-title d-flex align-items-center gap-2">
+                  <i data-lucide="user" style="width:16px;height:16px;"></i>
+                  <span>Active Session Profile</span>
+                </h3>
+              </div>
+              <div class="sp-card-body p-3">
+                <div class="d-flex align-items-center gap-3 mb-3">
+                  <div class="rounded-circle d-flex align-items-center justify-content-center text-white fw-bold fs-5" id="profile-avatar" style="width: 48px; height: 48px; background-color: var(--sp-primary);">
+                    U
+                  </div>
+                  <div>
+                    <h5 class="fw-bold mb-0" id="profile-name">User</h5>
+                    <div class="text-secondary small font-mono" id="profile-email">user@stockpilot.io</div>
+                  </div>
+                </div>
+                <table class="table table-sm table-borderless mb-0">
+                  <tbody>
+                    <tr><td class="text-secondary small" style="width: 140px;">Assigned Role:</td><td><span class="badge badge-neutral" id="profile-role">Staff</span></td></tr>
+                    <tr><td class="text-secondary small">Permissions Scope:</td><td class="small" id="profile-perms">Standard point-of-sale and catalog operations</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Business Configuration Card -->
+            <div class="sp-card">
+              <div class="sp-card-header">
+                <h3 class="sp-card-title d-flex align-items-center gap-2">
+                  <i data-lucide="building-2" style="width:16px;height:16px;"></i>
+                  <span>Business & Fiscal Configuration</span>
+                </h3>
+              </div>
+              <div class="sp-card-body p-3">
+                <div class="mb-3">
+                  <label class="form-label small fw-semibold">Store / Entity Name</label>
+                  <input type="text" class="form-control form-control-sm" value="StockPilot Central Store" readonly>
+                </div>
+                <div class="row g-2 mb-3">
+                  <div class="col-6">
+                    <label class="form-label small fw-semibold">Base Currency</label>
+                    <input type="text" class="form-control form-control-sm" value="USD ($)" readonly>
+                  </div>
+                  <div class="col-6">
+                    <label class="form-label small fw-semibold">Standard POS Tax Rate</label>
+                    <input type="text" class="form-control form-control-sm" value="5.00%" readonly>
+                  </div>
+                </div>
+                <div class="small text-secondary">
+                  Fiscal parameters and tax schedules are maintained under master company policies.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column: Diagnostics & Architecture -->
+          <div class="col-lg-6">
+            <!-- Diagnostics Card -->
+            <div class="sp-card mb-4">
+              <div class="sp-card-header">
+                <h3 class="sp-card-title d-flex align-items-center gap-2">
+                  <i data-lucide="activity" style="width:16px;height:16px;"></i>
+                  <span>Database & Service Diagnostics</span>
+                </h3>
+              </div>
+              <div class="sp-card-body p-3">
+                <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
+                  <div>
+                    <div class="fw-semibold small">Relational Database Engine</div>
+                    <div class="text-secondary small font-mono">Microsoft SQL Server 2022 (Port 1433)</div>
+                  </div>
+                  <span class="badge badge-success">Online & Connected</span>
+                </div>
+                <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
+                  <div>
+                    <div class="fw-semibold small">Catalog Database</div>
+                    <div class="text-secondary small font-mono">StockPilotDB (ACID Compliant)</div>
+                  </div>
+                  <span class="badge badge-neutral">Active</span>
+                </div>
+                <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
+                  <div>
+                    <div class="fw-semibold small">ML Demand Forecasting Service</div>
+                    <div class="text-secondary small font-mono">FastAPI + XGBoost Engine (Port 8000)</div>
+                  </div>
+                  <span class="badge badge-success" id="diag-ml-status">Online</span>
+                </div>
+                <div class="d-flex justify-content-between align-items-center py-2">
+                  <div>
+                    <div class="fw-semibold small">Business Intelligence Portal</div>
+                    <div class="text-secondary small font-mono">Metabase v0.50.32 (Port 3001)</div>
+                  </div>
+                  <a href="http://localhost:3001" target="_blank" class="btn btn-sm btn-secondary p-1 px-2">Launch Metabase</a>
+                </div>
+              </div>
+            </div>
+
+            <!-- Application Info Card -->
+            <div class="sp-card">
+              <div class="sp-card-header">
+                <h3 class="sp-card-title d-flex align-items-center gap-2">
+                  <i data-lucide="info" style="width:16px;height:16px;"></i>
+                  <span>Platform Information</span>
+                </h3>
+              </div>
+              <div class="sp-card-body p-3">
+                <table class="table table-sm table-borderless mb-0">
+                  <tbody>
+                    <tr><td class="text-secondary small" style="width: 140px;">Application:</td><td class="fw-semibold">StockPilot Retail Management SaaS</td></tr>
+                    <tr><td class="text-secondary small">Release Version:</td><td class="font-mono">v1.0.0-production</td></tr>
+                    <tr><td class="text-secondary small">Architecture:</td><td>Node.js Express + MS SQL Server 2022 + XGBoost ML</td></tr>
+                    <tr><td class="text-secondary small">API Documentation:</td><td><a href="/api/docs" target="_blank" class="text-primary fw-semibold">Swagger OpenAPI 3.0 (/api/docs)</a></td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="/js/api.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/settings.js"></script>
+</body>
+</html>

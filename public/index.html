@@ -3,27 +3,269 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>StockPilot - Redirecting...</title>
+  <title>StockPilot — Executive Overview</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="/css/style.css">
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Chart.js for data visualization -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
-<body class="d-flex align-items-center justify-content-center">
-  <div class="text-center p-5">
-    <div class="spinner-border text-primary mb-3" role="status">
-      <span class="visually-hidden">Loading...</span>
+<body>
+  <!-- Toast Container -->
+  <div id="toast-container"></div>
+
+  <!-- Global Layout Wrapper -->
+  <div id="app-layout">
+    <!-- Sidebar & Top Header Placeholder -->
+    <div id="navbar-placeholder"></div>
+
+    <!-- Main Content Area -->
+    <div id="main-wrapper">
+      <main id="content-area">
+        <!-- Page Header -->
+        <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+          <div>
+            <h1 class="page-title">Executive Overview</h1>
+            <p class="page-subtitle">Real-time store performance, financial turnover, and supply chain health</p>
+          </div>
+          <div class="d-flex align-items-center gap-2">
+            <select class="form-select form-select-sm" id="overview-date-filter" style="width: auto;">
+              <option value="30d">Last 30 Days</option>
+              <option value="7d">Last 7 Days</option>
+              <option value="90d">This Quarter</option>
+              <option value="all" selected>All Recorded History</option>
+            </select>
+            <a href="/sales.html" class="btn btn-sm btn-primary">
+              <i data-lucide="plus"></i>
+              <span>New Sale</span>
+            </a>
+            <a href="/purchase-orders.html" class="btn btn-sm btn-secondary">
+              <i data-lucide="truck"></i>
+              <span>Create PO</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- 4 Compact KPI Summary Cards -->
+        <div class="row g-3 mb-4">
+          <div class="col-sm-6 col-xl-3">
+            <div class="kpi-card">
+              <div class="kpi-header">
+                <span class="kpi-label">Total Gross Revenue</span>
+                <i data-lucide="dollar-sign" class="kpi-icon" style="width:16px;height:16px;"></i>
+              </div>
+              <div class="kpi-value" id="kpi-revenue">-</div>
+              <div class="kpi-subtext" id="kpi-revenue-sub">Loading sales transactions...</div>
+            </div>
+          </div>
+          <div class="col-sm-6 col-xl-3">
+            <div class="kpi-card">
+              <div class="kpi-header">
+                <span class="kpi-label">Gross Profit (Margin)</span>
+                <i data-lucide="trending-up" class="kpi-icon" style="width:16px;height:16px;"></i>
+              </div>
+              <div class="kpi-value" id="kpi-profit">-</div>
+              <div class="kpi-subtext" id="kpi-profit-sub">Calculated via historical unit costs</div>
+            </div>
+          </div>
+          <div class="col-sm-6 col-xl-3">
+            <div class="kpi-card">
+              <div class="kpi-header">
+                <span class="kpi-label">Inventory Valuation</span>
+                <i data-lucide="boxes" class="kpi-icon" style="width:16px;height:16px;"></i>
+              </div>
+              <div class="kpi-value" id="kpi-inv-val">-</div>
+              <div class="kpi-subtext" id="kpi-inv-sub">Total on-hand asset cost</div>
+            </div>
+          </div>
+          <div class="col-sm-6 col-xl-3">
+            <div class="kpi-card">
+              <div class="kpi-header">
+                <span class="kpi-label">Purchasing Spend</span>
+                <i data-lucide="shopping-bag" class="kpi-icon" style="width:16px;height:16px;"></i>
+              </div>
+              <div class="kpi-value" id="kpi-spend">-</div>
+              <div class="kpi-subtext" id="kpi-spend-sub">Incurred procurement spend</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Charts & Health Breakdown Row -->
+        <div class="row g-3 mb-4">
+          <!-- Revenue & Sales Trend Chart (8 cols) -->
+          <div class="col-lg-8">
+            <div class="sp-card h-100">
+              <div class="sp-card-header">
+                <h3 class="sp-card-title d-flex align-items-center gap-2">
+                  <i data-lucide="line-chart" style="width:16px;height:16px;" class="text-muted"></i>
+                  <span>Revenue & Sales Velocity Trends</span>
+                </h3>
+                <span class="text-muted small">Daily Turnover ($)</span>
+              </div>
+              <div class="sp-card-body">
+                <div style="height: 240px; position: relative;">
+                  <canvas id="salesTrendChart"></canvas>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Inventory Health Gauge (4 cols) -->
+          <div class="col-lg-4">
+            <div class="sp-card h-100">
+              <div class="sp-card-header">
+                <h3 class="sp-card-title d-flex align-items-center gap-2">
+                  <i data-lucide="shield-check" style="width:16px;height:16px;" class="text-muted"></i>
+                  <span>Catalog Health Summary</span>
+                </h3>
+                <a href="/inventory.html" class="small text-muted text-decoration-none">View All ↗</a>
+              </div>
+              <div class="sp-card-body d-flex flex-column justify-content-between">
+                <div>
+                  <div class="text-muted small mb-2">Overall Stock Balance Distribution</div>
+                  <!-- Progress Bar -->
+                  <div class="progress mb-3" style="height: 10px; border-radius: 6px; overflow: hidden; background: #EEF2EE;">
+                    <div id="bar-optimal" class="progress-bar" style="background-color: var(--sp-success); width: 70%;" title="Optimal Stock"></div>
+                    <div id="bar-low" class="progress-bar" style="background-color: var(--sp-warning); width: 20%;" title="Low Stock"></div>
+                    <div id="bar-out" class="progress-bar" style="background-color: var(--sp-danger); width: 10%;" title="Stockout"></div>
+                  </div>
+
+                  <!-- Legend List -->
+                  <div class="d-flex align-items-center justify-content-between py-2 border-bottom">
+                    <div class="d-flex align-items-center gap-2">
+                      <span class="status-dot" style="background-color: var(--sp-success);"></span>
+                      <span class="small">In Stock (Optimal)</span>
+                    </div>
+                    <span class="fw-semibold num small" id="health-optimal-count">-</span>
+                  </div>
+                  <div class="d-flex align-items-center justify-content-between py-2 border-bottom">
+                    <div class="d-flex align-items-center gap-2">
+                      <span class="status-dot" style="background-color: var(--sp-warning);"></span>
+                      <span class="small">Low Stock Warning</span>
+                    </div>
+                    <span class="fw-semibold num small text-warning" id="health-low-count">-</span>
+                  </div>
+                  <div class="d-flex align-items-center justify-content-between py-2">
+                    <div class="d-flex align-items-center gap-2">
+                      <span class="status-dot" style="background-color: var(--sp-danger);"></span>
+                      <span class="small">Out of Stock Alert</span>
+                    </div>
+                    <span class="fw-semibold num small text-danger" id="health-out-count">-</span>
+                  </div>
+                </div>
+
+                <div class="pt-3 border-top mt-2">
+                  <a href="/recommendations.html" class="btn btn-sm btn-outline-secondary w-100 justify-content-center">
+                    <i data-lucide="sparkles" style="width:14px;height:14px;"></i>
+                    <span>Review AI Replenishment Plans</span>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tables Row: Top Products & Recent Sales -->
+        <div class="row g-3 mb-4">
+          <!-- Top Selling Products (6 cols) -->
+          <div class="col-lg-6">
+            <div class="sp-card">
+              <div class="sp-card-header">
+                <h3 class="sp-card-title d-flex align-items-center gap-2">
+                  <i data-lucide="award" style="width:16px;height:16px;" class="text-muted"></i>
+                  <span>Top-Selling Products</span>
+                </h3>
+                <a href="/analytics.html" class="small text-muted text-decoration-none">Analytics ↗</a>
+              </div>
+              <div class="table-responsive" style="border: none; border-radius: 0;">
+                <table class="sp-table">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Product</th>
+                      <th class="text-end">Units Sold</th>
+                      <th class="text-end">Revenue</th>
+                      <th class="text-center">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody id="top-products-tbody">
+                    <tr><td colspan="5" class="text-center text-muted py-3">Loading top performers...</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- Recent Transactions (6 cols) -->
+          <div class="col-lg-6">
+            <div class="sp-card">
+              <div class="sp-card-header">
+                <h3 class="sp-card-title d-flex align-items-center gap-2">
+                  <i data-lucide="clock" style="width:16px;height:16px;" class="text-muted"></i>
+                  <span>Recent Sales Transactions</span>
+                </h3>
+                <a href="/sales.html" class="small text-muted text-decoration-none">POS Terminal ↗</a>
+              </div>
+              <div class="table-responsive" style="border: none; border-radius: 0;">
+                <table class="sp-table">
+                  <thead>
+                    <tr>
+                      <th>Receipt #</th>
+                      <th>Payment</th>
+                      <th class="text-end">Total Amount</th>
+                      <th class="text-end">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody id="recent-sales-tbody">
+                    <tr><td colspan="4" class="text-center text-muted py-3">Loading recent orders...</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Operations Row: Pending POs & Low Stock Alerts -->
+        <div class="row g-3">
+          <!-- Pending Purchase Orders (6 cols) -->
+          <div class="col-lg-6">
+            <div class="sp-card">
+              <div class="sp-card-header">
+                <h3 class="sp-card-title d-flex align-items-center gap-2">
+                  <i data-lucide="truck" style="width:16px;height:16px;" class="text-muted"></i>
+                  <span>Incoming Purchase Orders</span>
+                </h3>
+                <a href="/purchase-orders.html" class="small text-muted text-decoration-none">Manage POs ↗</a>
+              </div>
+              <div class="sp-card-body" id="pending-pos-container">
+                <div class="text-center text-muted py-3 small">Loading active orders...</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Low Stock Actionable Alerts (6 cols) -->
+          <div class="col-lg-6">
+            <div class="sp-card">
+              <div class="sp-card-header">
+                <h3 class="sp-card-title d-flex align-items-center gap-2">
+                  <i data-lucide="alert-triangle" style="width:16px;height:16px;" class="text-warning"></i>
+                  <span>Actionable Low-Stock Alerts</span>
+                </h3>
+                <a href="/recommendations.html" class="small text-muted text-decoration-none">AI Plan ↗</a>
+              </div>
+              <div class="sp-card-body" id="low-stock-container">
+                <div class="text-center text-muted py-3 small">Checking inventory thresholds...</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
     </div>
-    <h4 class="fw-bold">StockPilot</h4>
-    <p class="text-muted">Directing to your workspace...</p>
   </div>
 
   <script src="/js/api.js"></script>
   <script src="/js/auth.js"></script>
-  <script>
-    if (auth.isAuthenticated()) {
-      window.location.replace('/products.html');
-    } else {
-      window.location.replace('/login.html');
-    }
-  </script>
+  <script src="/js/overview.js"></script>
 </body>
 </html>
