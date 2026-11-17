@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   title: StockPilot API Specification
   version: 1.0.0
-  description: RESTful API for StockPilot Inventory Operations, RBAC Authentication, and Health Monitoring.
+  description: RESTful API for StockPilot Inventory Operations, RBAC Authentication, Catalog Management, and Health Monitoring.
 servers:
   - url: http://localhost:3000/api
     description: Local development server
@@ -68,20 +68,18 @@ paths:
         '401':
           description: Missing or invalid token.
 
-  /users:
+  /categories:
     get:
-      summary: List Users (Admin Only)
-      description: Returns list of system users. Requires Admin role.
+      summary: List Categories
+      description: Retrieves all active product taxonomy categories. Accessible to all authenticated users.
       security:
         - BearerAuth: []
       responses:
         '200':
-          description: List of user accounts.
-        '403':
-          description: Forbidden - Insufficient permissions.
+          description: Array of categories.
     post:
-      summary: Create New User (Admin Only)
-      description: Creates a new operator with assigned RBAC role.
+      summary: Create Category (Manager/Admin Only)
+      description: Creates a new product category.
       security:
         - BearerAuth: []
       requestBody:
@@ -90,56 +88,159 @@ paths:
           application/json:
             schema:
               type: object
-              required: [email, password, fullName, role]
+              required: [categoryName]
               properties:
-                email:
+                categoryName:
                   type: string
-                  format: email
-                password:
+                description:
                   type: string
-                  minLength: 8
-                fullName:
-                  type: string
-                role:
-                  type: string
-                  enum: [Admin, Manager, Staff]
       responses:
         '201':
-          description: User created.
+          description: Category created.
         '409':
-          description: Duplicate email address.
+          description: Duplicate category name.
 
-  /users/{id}:
+  /suppliers:
     get:
-      summary: Get User By ID (Admin Only)
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
+      summary: List Suppliers
+      description: Retrieves commercial vendor profiles and fulfillment lead times.
       security:
         - BearerAuth: []
       responses:
         '200':
-          description: User found.
-        '404':
-          description: User not found.
-    delete:
-      summary: Deactivate User (Admin Only)
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
+          description: Array of suppliers.
+    post:
+      summary: Create Supplier (Manager/Admin Only)
+      description: Registers a new vendor profile.
       security:
         - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [supplierName]
+              properties:
+                supplierName:
+                  type: string
+                contactEmail:
+                  type: string
+                contactPhone:
+                  type: string
+                address:
+                  type: string
+                defaultLeadTimeDays:
+                  type: integer
+                  default: 7
+      responses:
+        '201':
+          description: Supplier registered.
+
+  /products:
+    get:
+      summary: List Products & Inventory Positions
+      description: Returns product catalog with computed on-hand, available, and open PO stock balances.
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: search
+          in: query
+          schema:
+            type: string
+        - name: categoryId
+          in: query
+          schema:
+            type: integer
+        - name: stockStatus
+          in: query
+          schema:
+            type: string
+            enum: [OPTIMAL, LOW_STOCK, OUT_OF_STOCK]
       responses:
         '200':
-          description: User soft-deactivated.
+          description: Array of products.
+    post:
+      summary: Create Product & Initialize Stock (Manager/Admin Only)
+      description: Atomically inserts product, creates inventory record, and records opening ledger movement if initial stock > 0.
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [sku, productName, categoryId, costPrice, sellingPrice]
+              properties:
+                sku:
+                  type: string
+                productName:
+                  type: string
+                categoryId:
+                  type: integer
+                preferredSupplierId:
+                  type: integer
+                costPrice:
+                  type: number
+                sellingPrice:
+                  type: number
+                reorderPointThreshold:
+                  type: integer
+                targetSafetyStock:
+                  type: integer
+                leadTimeDays:
+                  type: integer
+                initialStock:
+                  type: integer
+      responses:
+        '201':
+          description: Product created and stock initialized.
         '400':
-          description: Cannot deactivate self.
+          description: Validation error or invalid category/supplier.
+        '409':
+          description: Duplicate SKU.
+
+  /products/{id}:
+    get:
+      summary: Get Product Details
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Detailed product specifications.
+    put:
+      summary: Update Product (Manager/Admin Only)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Product updated.
+    delete:
+      summary: Deactivate Product (Manager/Admin Only)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Product soft-deactivated.
 
 components:
   securitySchemes:

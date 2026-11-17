@@ -1,0 +1,93 @@
+/* ==============================================================================
+   StockPilot - Custom Application Stylesheet (Bootstrap 5 Enhancements)
+   ============================================================================== */
+
+:root {
+  --sp-primary: #0d6efd;
+  --sp-dark: #1e293b;
+  --sp-light-bg: #f8fafc;
+  --sp-card-border: #e2e8f0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  background-color: var(--sp-light-bg);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Navbar */
+.navbar-brand {
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+.nav-link.active {
+  font-weight: 600;
+  border-bottom: 2px solid #ffffff;
+}
+
+/* Cards & Tables */
+.card {
+  border: 1px solid var(--sp-card-border);
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.table th {
+  background-color: #f1f5f9;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #475569;
+}
+
+/* Status Badges */
+.badge-optimal {
+  background-color: #dcfce7;
+  color: #166534;
+  border: 1px solid #bbf7d0;
+}
+
+.badge-low-stock {
+  background-color: #fef9c3;
+  color: #854d0e;
+  border: 1px solid #fef08a;
+}
+
+.badge-out-of-stock {
+  background-color: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #fecaca;
+}
+
+/* Toast Alerts Container */
+#toast-container {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 1060;
+}
+
+/* Loading Spinner Overlay */
+.spinner-overlay {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+}
+
+/* Footer */
+footer {
+  margin-top: auto;
+  border-top: 1px solid var(--sp-card-border);
+  background-color: #ffffff;
+}
+
+/* Login Page Styling */
+.login-card {
+  max-width: 440px;
+  margin: 5% auto;
+  border-radius: 0.75rem;
+}
