@@ -1,0 +1,681 @@
+openapi: 3.0.3
+info:
+  title: StockPilot API Specification
+  version: 1.0.0
+  description: RESTful API for StockPilot Inventory Operations, RBAC Authentication, Catalog Management, and Health Monitoring.
+servers:
+  - url: http://localhost:3000/api
+    description: Local development server
+paths:
+  /health:
+    get:
+      summary: Service Health & Database Readiness Check
+      description: Returns health status of Express server and Microsoft SQL Server connection pool.
+      responses:
+        '200':
+          description: Service and database are UP and responsive.
+        '503':
+          description: Database or critical dependency is DOWN.
+
+  /auth/login:
+    post:
+      summary: Authenticate User
+      description: Validates user credentials, returns JWT bearer token, and sets secure HTTP-only cookie.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: admin@stockpilot.io
+                password:
+                  type: string
+                  example: Password123!
+      responses:
+        '200':
+          description: Authentication successful. Returns token and user object.
+        '400':
+          description: Validation error.
+        '401':
+          description: Invalid email or password.
+        '403':
+          description: Account deactivated.
+
+  /auth/logout:
+    post:
+      summary: Log Out User
+      description: Invalidates active session cookie.
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Logged out successfully.
+
+  /auth/me:
+    get:
+      summary: Get Current User Profile
+      description: Returns profile and roles of currently authenticated user.
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Authenticated user details.
+        '401':
+          description: Missing or invalid token.
+
+  /categories:
+    get:
+      summary: List Categories
+      description: Retrieves all active product taxonomy categories. Accessible to all authenticated users.
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Array of categories.
+    post:
+      summary: Create Category (Manager/Admin Only)
+      description: Creates a new product category.
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [categoryName]
+              properties:
+                categoryName:
+                  type: string
+                description:
+                  type: string
+      responses:
+        '201':
+          description: Category created.
+        '409':
+          description: Duplicate category name.
+
+  /suppliers:
+    get:
+      summary: List Suppliers
+      description: Retrieves commercial vendor profiles and fulfillment lead times.
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Array of suppliers.
+    post:
+      summary: Create Supplier (Manager/Admin Only)
+      description: Registers a new vendor profile.
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [supplierName]
+              properties:
+                supplierName:
+                  type: string
+                contactEmail:
+                  type: string
+                contactPhone:
+                  type: string
+                address:
+                  type: string
+                defaultLeadTimeDays:
+                  type: integer
+                  default: 7
+      responses:
+        '201':
+          description: Supplier registered.
+
+  /products:
+    get:
+      summary: List Products & Inventory Positions
+      description: Returns product catalog with computed on-hand, available, and open PO stock balances.
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: search
+          in: query
+          schema:
+            type: string
+        - name: categoryId
+          in: query
+          schema:
+            type: integer
+        - name: stockStatus
+          in: query
+          schema:
+            type: string
+            enum: [OPTIMAL, LOW_STOCK, OUT_OF_STOCK]
+      responses:
+        '200':
+          description: Array of products.
+    post:
+      summary: Create Product & Initialize Stock (Manager/Admin Only)
+      description: Atomically inserts product, creates inventory record, and records opening ledger movement if initial stock > 0.
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [sku, productName, categoryId, costPrice, sellingPrice]
+              properties:
+                sku:
+                  type: string
+                productName:
+                  type: string
+                categoryId:
+                  type: integer
+                preferredSupplierId:
+                  type: integer
+                costPrice:
+                  type: number
+                sellingPrice:
+                  type: number
+                reorderPointThreshold:
+                  type: integer
+                targetSafetyStock:
+                  type: integer
+                leadTimeDays:
+                  type: integer
+                initialStock:
+                  type: integer
+      responses:
+        '201':
+          description: Product created and stock initialized.
+        '400':
+          description: Validation error or invalid category/supplier.
+        '409':
+          description: Duplicate SKU.
+
+  /products/{id}:
+    get:
+      summary: Get Product Details
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Detailed product specifications.
+    put:
+      summary: Update Product (Manager/Admin Only)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Product updated.
+    delete:
+      summary: Deactivate Product (Manager/Admin Only)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Product soft-deactivated.
+
+  /inventory:
+    get:
+      summary: Get Inventory Positions & Health Status
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: categoryId
+          in: query
+          schema:
+            type: integer
+        - name: stockHealth
+          in: query
+          schema:
+            type: string
+            enum: [HEALTHY, LOW_STOCK, OUT_OF_STOCK]
+        - name: search
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of inventory positions with valuation and stock health.
+
+  /inventory/movements:
+    get:
+      summary: Query Stock Movement Ledger
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: productId
+          in: query
+          schema:
+            type: integer
+        - name: movementType
+          in: query
+          schema:
+            type: string
+            enum: [SALE, PO_RECEIPT, ADJUSTMENT_IN, ADJUSTMENT_OUT, RETURN]
+      responses:
+        '200':
+          description: Audit history of stock movements.
+
+  /inventory/adjust:
+    post:
+      summary: Manual Stock Adjustment (Manager/Admin Only)
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [productId, quantityDelta, movementType, notes]
+              properties:
+                productId:
+                  type: integer
+                quantityDelta:
+                  type: integer
+                movementType:
+                  type: string
+                  enum: [ADJUSTMENT_IN, ADJUSTMENT_OUT, RETURN]
+                notes:
+                  type: string
+      responses:
+        '200':
+          description: Stock adjusted and ledger entry written.
+        '400':
+          description: Invalid adjustment or negative stock.
+
+  /inventory/reorder-alerts:
+    get:
+      summary: Get Rule-Based Reorder Recommendations
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Active products at or below reorder threshold with suggested replenishment quantities.
+
+  /sales:
+    get:
+      summary: List Sales Transactions
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: List of sales transactions with line counts and totals.
+    post:
+      summary: Record New Point of Sale Transaction
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [items]
+              properties:
+                items:
+                  type: array
+                  items:
+                    type: object
+                    required: [productId, quantity]
+                    properties:
+                      productId:
+                        type: integer
+                      quantity:
+                        type: integer
+      responses:
+        '201':
+          description: Sale posted atomically, inventory deducted, and receipt generated.
+        '400':
+          description: Insufficient stock or invalid payload.
+
+  /sales/{id}:
+    get:
+      summary: Get Sale Receipt & Details
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Sale receipt with items and historical gross profit.
+        '404':
+          description: Sale not found.
+
+  /purchase-orders:
+    get:
+      summary: List Purchase Orders
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [DRAFT, SUBMITTED, PARTIALLY_RECEIVED, RECEIVED, CANCELLED]
+      responses:
+        '200':
+          description: List of purchase orders.
+    post:
+      summary: Create Draft Purchase Order (Manager/Admin Only)
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [supplierId, items]
+              properties:
+                supplierId:
+                  type: integer
+                expectedDeliveryDate:
+                  type: string
+                  format: date
+                items:
+                  type: array
+                  items:
+                    type: object
+                    required: [productId, orderedQuantity, unitCost]
+                    properties:
+                      productId:
+                        type: integer
+                      orderedQuantity:
+                        type: integer
+                      unitCost:
+                        type: number
+      responses:
+        '201':
+          description: Draft PO created.
+
+  /purchase-orders/{id}:
+    get:
+      summary: Get Purchase Order Details
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Detailed PO with items and receiving progress.
+
+  /purchase-orders/{id}/submit:
+    post:
+      summary: Submit/Authorize Purchase Order (Manager/Admin Only)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: PO status transitioned to SUBMITTED and counted as on-order inventory.
+
+  /purchase-orders/{id}/receive:
+    post:
+      summary: Receive Inbound PO Items (Manager/Admin Only)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [receipts]
+              properties:
+                receipts:
+                  type: array
+                  items:
+                    type: object
+                    required: [poItemId, quantityToReceive]
+                    properties:
+                      poItemId:
+                        type: integer
+                      quantityToReceive:
+                        type: integer
+      responses:
+        '200':
+          description: Items received, inventory incremented, and PO status updated.
+
+  /purchase-orders/{id}/cancel:
+    post:
+      summary: Cancel Purchase Order (Manager/Admin Only)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Unreceived PO cancelled.
+
+  /analytics/executive:
+    get:
+      summary: Get High-Level Executive Summary KPIs (Manager/Admin Only)
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Aggregated business revenue, gross margin, inventory asset valuation, and SKU health.
+
+  /analytics/sales-trends:
+    get:
+      summary: Get Chronological Daily Sales Trends (Manager/Admin Only)
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 30
+      responses:
+        '200':
+          description: Chronological list of daily sales metrics.
+
+  /analytics/category-performance:
+    get:
+      summary: Get Category Revenue, Gross Profit & Valuation (Manager/Admin Only)
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Financial and volume breakdown across product categories.
+
+  /analytics/top-products:
+    get:
+      summary: Get Top Selling Products (Manager/Admin Only)
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 10
+      responses:
+        '200':
+          description: Top products ranked by total revenue.
+
+  /analytics/supplier-performance:
+    get:
+      summary: Get Supplier Performance & Fulfillment Rates (Manager/Admin Only)
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Supplier spend, order volume, and on-time fulfillment rates.
+
+  /forecast/ml-status:
+    get:
+      summary: Get ML Forecasting Service Health & Model Info
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Returns ML microservice availability, model version, and test metrics.
+
+  /forecast/generate:
+    post:
+      summary: Trigger Demand Forecasting & Replenishment Calculation (Manager/Admin Only)
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                horizonDays:
+                  type: integer
+                  minimum: 7
+                  maximum: 30
+                  default: 14
+      responses:
+        '201':
+          description: Successfully executed forecast and updated replenishment recommendations.
+        '400':
+          description: Invalid horizon range.
+        '403':
+          description: Forbidden for Staff role.
+
+  /forecast/recommendations:
+    get:
+      summary: List Replenishment Recommendations
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [PENDING, APPROVED_TO_PO, REJECTED]
+        - name: productId
+          in: query
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: List of calculated reorder recommendations with suggested quantities.
+
+  /forecast/recommendations/{id}/approve:
+    post:
+      summary: Approve Recommendation and Create Purchase Order (Manager/Admin Only)
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Recommendation approved and official Purchase Order created and submitted.
+        '400':
+          description: Recommendation already processed or invalid quantity.
+
+  /forecast/recommendations/{id}/reject:
+    post:
+      summary: Reject Recommendation (Manager/Admin Only)
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                reason:
+                  type: string
+      responses:
+        '200':
+          description: Recommendation marked as REJECTED.
+
+  /forecast/runs:
+    get:
+      summary: List Historical Forecast Runs
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: List of recorded forecast runs with model versions and dates.
+
+  /forecast/runs/{id}:
+    get:
+      summary: Get Forecast Run Details with Daily SKU Projections
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Forecast run details with itemized daily predicted demand.
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

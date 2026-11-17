@@ -1,0 +1,51 @@
+{
+  "name": "stockpilot-backend",
+  "version": "1.0.0",
+  "description": "StockPilot Intelligent Inventory Management & BI System - Core Express Backend",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js",
+    "test": "jest --runInBand --detectOpenHandles --forceExit",
+    "test:coverage": "jest --runInBand --coverage --detectOpenHandles --forceExit",
+    "db:migrate": "powershell -ExecutionPolicy Bypass -File .\\sql\\scripts\\run_migrations.ps1"
+  },
+  "keywords": [
+    "inventory",
+    "express",
+    "sql-server",
+    "mssql",
+    "business-intelligence",
+    "tpds-iii"
+  ],
+  "author": "Ayush Kathal",
+  "license": "MIT",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "helmet": "^7.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "morgan": "^1.10.0",
+    "mssql": "^10.0.4",
+    "swagger-ui-express": "^5.0.1",
+    "yamljs": "^0.3.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "nodemon": "^3.1.4",
+    "supertest": "^7.0.0"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "testTimeout": 10000,
+    "verbose": true,
+    "moduleNameMapper": {
+      "^https-proxy-agent$": "<rootDir>/tests/mocks/httpsProxyAgentMock.js",
+      "^http-proxy-agent$": "<rootDir>/tests/mocks/httpProxyAgentMock.js"
+    }
+  }
+}

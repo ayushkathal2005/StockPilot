@@ -1,0 +1,512 @@
+{
+  "test_evaluation": {
+    "xgboost": {
+      "mae": 3.2389,
+      "rmse": 4.2921,
+      "wape": 0.0876,
+      "count": 2108
+    },
+    "seasonal_naive_lag_7": {
+      "mae": 5.4953,
+      "rmse": 8.5478,
+      "wape": 0.1487,
+      "count": 2108
+    },
+    "moving_average_7d": {
+      "mae": 7.1337,
+      "rmse": 9.6194,
+      "wape": 0.1931,
+      "count": 2108
+    },
+    "moving_average_28d": {
+      "mae": 6.9693,
+      "rmse": 9.4843,
+      "wape": 0.1886,
+      "count": 2108
+    }
+  },
+  "category_breakdown": {
+    "Beverages": {
+      "mae": 4.0363,
+      "rmse": 5.1183,
+      "wape": 0.0857,
+      "count": 422
+    },
+    "Dairy & Chilled": {
+      "mae": 3.9279,
+      "rmse": 5.3848,
+      "wape": 0.0732,
+      "count": 423
+    },
+    "Household Essentials": {
+      "mae": 2.7882,
+      "rmse": 3.5709,
+      "wape": 0.1032,
+      "count": 419
+    },
+    "Packaged Foods": {
+      "mae": 2.9655,
+      "rmse": 3.7811,
+      "wape": 0.0952,
+      "count": 427
+    },
+    "Personal Care": {
+      "mae": 2.4659,
+      "rmse": 3.1223,
+      "wape": 0.0961,
+      "count": 417
+    }
+  },
+  "sample_predictions": [
+    {
+      "product_id": 1,
+      "sku": "BEV-COLA-330",
+      "date": "2026-05-01",
+      "actual": 64.0,
+      "xgboost_pred": 54.19,
+      "seasonal_naive_pred": 53.0,
+      "ma7_pred": 49.43
+    },
+    {
+      "product_id": 2,
+      "sku": "BEV-DIET-330",
+      "date": "2026-05-01",
+      "actual": 39.0,
+      "xgboost_pred": 36.92,
+      "seasonal_naive_pred": 35.0,
+      "ma7_pred": 33.14
+    },
+    {
+      "product_id": 3,
+      "sku": "BEV-ORNG-100",
+      "date": "2026-05-01",
+      "actual": 62.0,
+      "xgboost_pred": 60.37,
+      "seasonal_naive_pred": 96.0,
+      "ma7_pred": 59.14
+    },
+    {
+      "product_id": 4,
+      "sku": "BEV-APPL-100",
+      "date": "2026-05-01",
+      "actual": 48.0,
+      "xgboost_pred": 36.98,
+      "seasonal_naive_pred": 29.0,
+      "ma7_pred": 36.43
+    },
+    {
+      "product_id": 5,
+      "sku": "BEV-SPRK-500",
+      "date": "2026-05-01",
+      "actual": 39.0,
+      "xgboost_pred": 35.14,
+      "seasonal_naive_pred": 43.0,
+      "ma7_pred": 33.29
+    },
+    {
+      "product_id": 6,
+      "sku": "BEV-GRNT-050",
+      "date": "2026-05-01",
+      "actual": 26.0,
+      "xgboost_pred": 25.61,
+      "seasonal_naive_pred": 26.0,
+      "ma7_pred": 21.29
+    },
+    {
+      "product_id": 7,
+      "sku": "BEV-ROST-250",
+      "date": "2026-05-01",
+      "actual": 42.0,
+      "xgboost_pred": 40.44,
+      "seasonal_naive_pred": 36.0,
+      "ma7_pred": 39.86
+    },
+    {
+      "product_id": 8,
+      "sku": "PKF-CHOC-150",
+      "date": "2026-05-01",
+      "actual": 24.0,
+      "xgboost_pred": 27.89,
+      "seasonal_naive_pred": 29.0,
+      "ma7_pred": 27.29
+    },
+    {
+      "product_id": 9,
+      "sku": "PKF-CRCK-200",
+      "date": "2026-05-01",
+      "actual": 30.0,
+      "xgboost_pred": 25.88,
+      "seasonal_naive_pred": 26.0,
+      "ma7_pred": 23.14
+    },
+    {
+      "product_id": 10,
+      "sku": "PKF-PSTA-500",
+      "date": "2026-05-01",
+      "actual": 52.0,
+      "xgboost_pred": 59.64,
+      "seasonal_naive_pred": 59.0,
+      "ma7_pred": 55.29
+    },
+    {
+      "product_id": 11,
+      "sku": "PKF-TOMA-400",
+      "date": "2026-05-01",
+      "actual": 43.0,
+      "xgboost_pred": 50.27,
+      "seasonal_naive_pred": 47.0,
+      "ma7_pred": 46.86
+    },
+    {
+      "product_id": 12,
+      "sku": "PKF-OATS-100",
+      "date": "2026-05-01",
+      "actual": 20.0,
+      "xgboost_pred": 22.78,
+      "seasonal_naive_pred": 24.0,
+      "ma7_pred": 21.86
+    },
+    {
+      "product_id": 13,
+      "sku": "PKF-CHIP-180",
+      "date": "2026-05-01",
+      "actual": 40.0,
+      "xgboost_pred": 44.22,
+      "seasonal_naive_pred": 44.0,
+      "ma7_pred": 38.14
+    },
+    {
+      "product_id": 14,
+      "sku": "PKF-ALMD-500",
+      "date": "2026-05-01",
+      "actual": 18.0,
+      "xgboost_pred": 18.7,
+      "seasonal_naive_pred": 22.0,
+      "ma7_pred": 19.43
+    },
+    {
+      "product_id": 15,
+      "sku": "DRY-WMLK-100",
+      "date": "2026-05-01",
+      "actual": 95.0,
+      "xgboost_pred": 91.96,
+      "seasonal_naive_pred": 99.0,
+      "ma7_pred": 87.43
+    },
+    {
+      "product_id": 16,
+      "sku": "DRY-SMLK-100",
+      "date": "2026-05-01",
+      "actual": 82.0,
+      "xgboost_pred": 83.71,
+      "seasonal_naive_pred": 80.0,
+      "ma7_pred": 76.57
+    },
+    {
+      "product_id": 17,
+      "sku": "DRY-CHED-250",
+      "date": "2026-05-01",
+      "actual": 39.0,
+      "xgboost_pred": 34.95,
+      "seasonal_naive_pred": 34.0,
+      "ma7_pred": 31.14
+    },
+    {
+      "product_id": 18,
+      "sku": "DRY-YOGT-500",
+      "date": "2026-05-01",
+      "actual": 48.0,
+      "xgboost_pred": 43.93,
+      "seasonal_naive_pred": 44.0,
+      "ma7_pred": 40.43
+    },
+    {
+      "product_id": 19,
+      "sku": "DRY-BUTR-250",
+      "date": "2026-05-01",
+      "actual": 34.0,
+      "xgboost_pred": 38.55,
+      "seasonal_naive_pred": 40.0,
+      "ma7_pred": 34.86
+    },
+    {
+      "product_id": 20,
+      "sku": "DRY-EGGS-012",
+      "date": "2026-05-01",
+      "actual": 72.0,
+      "xgboost_pred": 70.56,
+      "seasonal_naive_pred": 67.0,
+      "ma7_pred": 67.57
+    },
+    {
+      "product_id": 21,
+      "sku": "DRY-CRMT-200",
+      "date": "2026-05-01",
+      "actual": 21.0,
+      "xgboost_pred": 20.97,
+      "seasonal_naive_pred": 24.0,
+      "ma7_pred": 20.71
+    },
+    {
+      "product_id": 22,
+      "sku": "HSE-LDET-200",
+      "date": "2026-05-01",
+      "actual": 18.0,
+      "xgboost_pred": 19.97,
+      "seasonal_naive_pred": 22.0,
+      "ma7_pred": 18.57
+    },
+    {
+      "product_id": 23,
+      "sku": "HSE-DWSH-750",
+      "date": "2026-05-01",
+      "actual": 34.0,
+      "xgboost_pred": 34.61,
+      "seasonal_naive_pred": 33.0,
+      "ma7_pred": 30.86
+    },
+    {
+      "product_id": 24,
+      "sku": "HSE-PTOW-004",
+      "date": "2026-05-01",
+      "actual": 60.0,
+      "xgboost_pred": 61.28,
+      "seasonal_naive_pred": 43.0,
+      "ma7_pred": 44.0
+    },
+    {
+      "product_id": 25,
+      "sku": "HSE-TLTP-012",
+      "date": "2026-05-01",
+      "actual": 36.0,
+      "xgboost_pred": 40.26,
+      "seasonal_naive_pred": 36.0,
+      "ma7_pred": 38.29
+    },
+    {
+      "product_id": 26,
+      "sku": "HSE-TRSH-030",
+      "date": "2026-05-01",
+      "actual": 19.0,
+      "xgboost_pred": 26.08,
+      "seasonal_naive_pred": 26.0,
+      "ma7_pred": 24.29
+    },
+    {
+      "product_id": 27,
+      "sku": "HSE-CLNR-500",
+      "date": "2026-05-01",
+      "actual": 30.0,
+      "xgboost_pred": 27.97,
+      "seasonal_naive_pred": 26.0,
+      "ma7_pred": 23.86
+    },
+    {
+      "product_id": 28,
+      "sku": "HSE-SPNG-006",
+      "date": "2026-05-01",
+      "actual": 23.0,
+      "xgboost_pred": 24.12,
+      "seasonal_naive_pred": 25.0,
+      "ma7_pred": 22.43
+    },
+    {
+      "product_id": 29,
+      "sku": "PER-SHMP-400",
+      "date": "2026-05-01",
+      "actual": 18.0,
+      "xgboost_pred": 21.59,
+      "seasonal_naive_pred": 23.0,
+      "ma7_pred": 20.57
+    },
+    {
+      "product_id": 30,
+      "sku": "PER-COND-400",
+      "date": "2026-05-01",
+      "actual": 16.0,
+      "xgboost_pred": 18.84,
+      "seasonal_naive_pred": 26.0,
+      "ma7_pred": 16.0
+    },
+    {
+      "product_id": 31,
+      "sku": "PER-BWSH-500",
+      "date": "2026-05-01",
+      "actual": 27.0,
+      "xgboost_pred": 25.48,
+      "seasonal_naive_pred": 27.0,
+      "ma7_pred": 23.86
+    },
+    {
+      "product_id": 32,
+      "sku": "PER-SOAP-004",
+      "date": "2026-05-01",
+      "actual": 36.0,
+      "xgboost_pred": 37.15,
+      "seasonal_naive_pred": 42.0,
+      "ma7_pred": 34.43
+    },
+    {
+      "product_id": 33,
+      "sku": "PER-TPST-100",
+      "date": "2026-05-01",
+      "actual": 51.0,
+      "xgboost_pred": 42.89,
+      "seasonal_naive_pred": 46.0,
+      "ma7_pred": 38.86
+    },
+    {
+      "product_id": 34,
+      "sku": "PER-TBRS-002",
+      "date": "2026-05-01",
+      "actual": 30.0,
+      "xgboost_pred": 22.82,
+      "seasonal_naive_pred": 23.0,
+      "ma7_pred": 21.0
+    },
+    {
+      "product_id": 35,
+      "sku": "PER-HDLT-250",
+      "date": "2026-05-01",
+      "actual": 17.0,
+      "xgboost_pred": 16.68,
+      "seasonal_naive_pred": 17.0,
+      "ma7_pred": 15.43
+    },
+    {
+      "product_id": 1,
+      "sku": "BEV-COLA-330",
+      "date": "2026-05-02",
+      "actual": 79.0,
+      "xgboost_pred": 67.9,
+      "seasonal_naive_pred": 75.0,
+      "ma7_pred": 51.0
+    },
+    {
+      "product_id": 2,
+      "sku": "BEV-DIET-330",
+      "date": "2026-05-02",
+      "actual": 55.0,
+      "xgboost_pred": 45.89,
+      "seasonal_naive_pred": 46.0,
+      "ma7_pred": 33.71
+    },
+    {
+      "product_id": 3,
+      "sku": "BEV-ORNG-100",
+      "date": "2026-05-02",
+      "actual": 85.0,
+      "xgboost_pred": 70.51,
+      "seasonal_naive_pred": 72.0,
+      "ma7_pred": 54.29
+    },
+    {
+      "product_id": 4,
+      "sku": "BEV-APPL-100",
+      "date": "2026-05-02",
+      "actual": 55.0,
+      "xgboost_pred": 50.32,
+      "seasonal_naive_pred": 53.0,
+      "ma7_pred": 39.14
+    },
+    {
+      "product_id": 5,
+      "sku": "BEV-SPRK-500",
+      "date": "2026-05-02",
+      "actual": 46.0,
+      "xgboost_pred": 43.1,
+      "seasonal_naive_pred": 57.0,
+      "ma7_pred": 32.71
+    },
+    {
+      "product_id": 6,
+      "sku": "BEV-GRNT-050",
+      "date": "2026-05-02",
+      "actual": 30.0,
+      "xgboost_pred": 29.47,
+      "seasonal_naive_pred": 27.0,
+      "ma7_pred": 21.29
+    },
+    {
+      "product_id": 7,
+      "sku": "BEV-ROST-250",
+      "date": "2026-05-02",
+      "actual": 63.0,
+      "xgboost_pred": 50.77,
+      "seasonal_naive_pred": 58.0,
+      "ma7_pred": 40.71
+    },
+    {
+      "product_id": 8,
+      "sku": "PKF-CHOC-150",
+      "date": "2026-05-02",
+      "actual": 37.0,
+      "xgboost_pred": 32.52,
+      "seasonal_naive_pred": 43.0,
+      "ma7_pred": 26.57
+    },
+    {
+      "product_id": 9,
+      "sku": "PKF-CRCK-200",
+      "date": "2026-05-02",
+      "actual": 34.0,
+      "xgboost_pred": 31.3,
+      "seasonal_naive_pred": 29.0,
+      "ma7_pred": 23.71
+    },
+    {
+      "product_id": 10,
+      "sku": "PKF-PSTA-500",
+      "date": "2026-05-02",
+      "actual": 67.0,
+      "xgboost_pred": 70.33,
+      "seasonal_naive_pred": 80.0,
+      "ma7_pred": 54.29
+    },
+    {
+      "product_id": 11,
+      "sku": "PKF-TOMA-400",
+      "date": "2026-05-02",
+      "actual": 68.0,
+      "xgboost_pred": 60.34,
+      "seasonal_naive_pred": 63.0,
+      "ma7_pred": 46.29
+    },
+    {
+      "product_id": 12,
+      "sku": "PKF-OATS-100",
+      "date": "2026-05-02",
+      "actual": 31.0,
+      "xgboost_pred": 28.29,
+      "seasonal_naive_pred": 31.0,
+      "ma7_pred": 21.29
+    },
+    {
+      "product_id": 13,
+      "sku": "PKF-CHIP-180",
+      "date": "2026-05-02",
+      "actual": 47.0,
+      "xgboost_pred": 48.09,
+      "seasonal_naive_pred": 45.0,
+      "ma7_pred": 37.57
+    },
+    {
+      "product_id": 14,
+      "sku": "PKF-ALMD-500",
+      "date": "2026-05-02",
+      "actual": 19.0,
+      "xgboost_pred": 21.74,
+      "seasonal_naive_pred": 26.0,
+      "ma7_pred": 18.86
+    },
+    {
+      "product_id": 15,
+      "sku": "DRY-WMLK-100",
+      "date": "2026-05-02",
+      "actual": 127.0,
+      "xgboost_pred": 116.94,
+      "seasonal_naive_pred": 114.0,
+      "ma7_pred": 86.86
+    }
+  ]
+}

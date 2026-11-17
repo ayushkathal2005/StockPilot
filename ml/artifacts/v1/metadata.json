@@ -1,0 +1,121 @@
+{
+  "model_version": "v1.0.0",
+  "model_type": "XGBRegressor (Pooled Supervised Demand Forecasting)",
+  "training_timestamp": "2026-11-17T18:54:05.743404+00:00",
+  "random_seed": 42,
+  "data_summary": {
+    "source_file": "ml/data/daily_demand_synthetic.csv",
+    "total_records": 19110,
+    "unique_skus": 35,
+    "date_range": "2025-01-01 to 2026-06-30",
+    "stockout_censored_days_excluded": 286,
+    "train_range": "2025-01-29 to 2026-03-31",
+    "train_samples": 14698,
+    "val_range": "2026-04-01 to 2026-04-30",
+    "val_samples": 1038,
+    "test_range": "2026-05-01 to 2026-06-30",
+    "test_samples": 2108
+  },
+  "feature_list": [
+    "product_encoded",
+    "category_encoded",
+    "day_of_week",
+    "day_of_month",
+    "month",
+    "week_of_year",
+    "is_weekend",
+    "selling_price",
+    "is_promotional_day",
+    "price_ratio",
+    "lag_1",
+    "lag_7",
+    "lag_14",
+    "lag_28",
+    "rolling_7_mean",
+    "rolling_7_std",
+    "rolling_28_mean",
+    "rolling_28_std"
+  ],
+  "hyperparameters": {
+    "n_estimators": 250,
+    "max_depth": 5,
+    "learning_rate": 0.04,
+    "subsample": 0.85,
+    "colsample_bytree": 0.85,
+    "reg_alpha": 0.1,
+    "reg_lambda": 1.0,
+    "random_state": 42,
+    "n_jobs": -1,
+    "objective": "reg:squarederror"
+  },
+  "model_comparison": {
+    "xgboost": {
+      "mae": 3.2389,
+      "rmse": 4.2921,
+      "wape": 0.0876,
+      "count": 2108
+    },
+    "seasonal_naive_lag_7": {
+      "mae": 5.4953,
+      "rmse": 8.5478,
+      "wape": 0.1487,
+      "count": 2108
+    },
+    "moving_average_7d": {
+      "mae": 7.1337,
+      "rmse": 9.6194,
+      "wape": 0.1931,
+      "count": 2108
+    },
+    "moving_average_28d": {
+      "mae": 6.9693,
+      "rmse": 9.4843,
+      "wape": 0.1886,
+      "count": 2108
+    }
+  },
+  "model_acceptance_gate": {
+    "status": "PREFERRED_MODEL",
+    "xgboost_wape": 0.0876,
+    "best_baseline_wape": 0.1487,
+    "wape_improvement_pct": 41.09,
+    "is_selected_for_replenishment": true
+  },
+  "category_performance": {
+    "Beverages": {
+      "mae": 4.0363,
+      "rmse": 5.1183,
+      "wape": 0.0857,
+      "count": 422
+    },
+    "Dairy & Chilled": {
+      "mae": 3.9279,
+      "rmse": 5.3848,
+      "wape": 0.0732,
+      "count": 423
+    },
+    "Household Essentials": {
+      "mae": 2.7882,
+      "rmse": 3.5709,
+      "wape": 0.1032,
+      "count": 419
+    },
+    "Packaged Foods": {
+      "mae": 2.9655,
+      "rmse": 3.7811,
+      "wape": 0.0952,
+      "count": 427
+    },
+    "Personal Care": {
+      "mae": 2.4659,
+      "rmse": 3.1223,
+      "wape": 0.0961,
+      "count": 417
+    }
+  },
+  "artifact_files": {
+    "model_json": "xgboost_model.json",
+    "preprocessor_joblib": "preprocessor.joblib",
+    "metadata_json": "metadata.json"
+  }
+}

@@ -1,0 +1,128 @@
+networks:
+  stockpilot-net:
+    name: stockpilot-net
+    driver: bridge
+
+volumes:
+  mssql_data:
+    name: stockpilot_mssql_data
+  metabase_data:
+    name: stockpilot_metabase_data
+
+services:
+  # ============================================================================
+  # 1. Primary Relational Store: Microsoft SQL Server 2022
+  # ============================================================================
+  stockpilot-mssql:
+    container_name: stockpilot-mssql
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    restart: unless-stopped
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=${MSSQL_SA_PASSWORD:-YourStrong@Passw0rd123!}
+      - MSSQL_PID=Developer
+    ports:
+      - "1433:1433"
+    volumes:
+      - mssql_data:/var/opt/mssql
+    networks:
+      - stockpilot-net
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P '${MSSQL_SA_PASSWORD:-YourStrong@Passw0rd123!}' -C -Q 'SELECT 1' || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+
+  # ============================================================================
+  # 2. Machine Learning Demand Forecasting Microservice (FastAPI + XGBoost)
+  # ============================================================================
+  stockpilot-ml-service:
+    container_name: stockpilot-ml-service
+    build:
+      context: .
+      dockerfile: ml/Dockerfile
+    restart: unless-stopped
+    depends_on:
+      stockpilot-mssql:
+        condition: service_healthy
+    ports:
+      - "8000:8000"
+    environment:
+      - PORT=8000
+      - DB_SERVER=stockpilot-mssql
+      - DB_PORT=1433
+      - DB_NAME=StockPilotDB
+      - DB_USER=stockpilot_app
+      - DB_PASSWORD=${DB_PASSWORD:-YourStrong@Passw0rd}
+    networks:
+      - stockpilot-net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+
+  # ============================================================================
+  # 3. Primary Business Application Backend (Node.js LTS + Express)
+  # ============================================================================
+  stockpilot-backend:
+    container_name: stockpilot-backend
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    depends_on:
+      stockpilot-mssql:
+        condition: service_healthy
+      stockpilot-ml-service:
+        condition: service_healthy
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - DB_SERVER=stockpilot-mssql
+      - DB_PORT=1433
+      - DB_NAME=StockPilotDB
+      - DB_USER=stockpilot_app
+      - DB_PASSWORD=${DB_PASSWORD:-YourStrong@Passw0rd}
+      - DB_ENCRYPT=false
+      - DB_TRUST_SERVER_CERTIFICATE=true
+      - ML_SERVICE_URL=http://stockpilot-ml-service:8000
+      - JWT_SECRET=${JWT_SECRET:-super_secret_production_key_32_chars_long}
+      - JWT_EXPIRES_IN=8h
+    networks:
+      - stockpilot-net
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/api/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+
+  # ============================================================================
+  # 4. Business Intelligence & Reporting Dashboards (Metabase)
+  # ============================================================================
+  stockpilot-metabase:
+    container_name: stockpilot-metabase
+    image: metabase/metabase:v0.50.32
+    restart: unless-stopped
+    depends_on:
+      stockpilot-mssql:
+        condition: service_healthy
+    ports:
+      - "3001:3000"
+    environment:
+      - MB_DB_FILE=/metabase.db/metabase.db
+    volumes:
+      - metabase_data:/metabase.db
+    networks:
+      - stockpilot-net
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost:3000/api/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
